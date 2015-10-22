@@ -28,7 +28,59 @@
 
             <aside id="featured" class="body">
                 <article>
-                    <h1 class="entry-title"><a href="//jepio.github.io/playing-with-cp.html">playing with cp</a></h1>
+                    <h1 class="entry-title"><a href="//jepio.github.io/printing-symbol-table.html">printing symbol table</a></h1>
+<footer class="post-info">
+        <abbr class="published" title="2015-10-21T20:15:00+02:00">
+                Published: Wed 21 October 2015
+        </abbr>
+
+        <address class="vcard author">
+                By                         <a class="url fn" href="//jepio.github.io/author/jepio.html">Jepio</a>
+        </address>
+<p>In <a href="//jepio.github.io/category/programming.html">programming</a>.</p>
+
+</footer><!-- /.post-info --><p>Ever so often I want to do two things:</p>
+<ol>
+<li>read the table of symbols exported from a shared library/executable</li>
+<li>read the <em>soname</em> of a library along with shared library dependencies</li>
+</ol>
+<p>Here's how to do both with 3 tools: <code>nm</code>, <code>readelf</code>, <code>objdump</code>. For the sake of
+brevity I will be working on a DSO<sup id="fnref:1"><a class="footnote-ref" href="#fn:1" rel="footnote">1</a></sup> called <code>libtest.so</code>.</p>
+<h2>Reading symbol table</h2>
+<div class="highlight"><pre>nm -CD libtest.so
+readelf -sD libtest.so  <span class="c"># no demangling!</span>
+objdump -CT libtest.so
+</pre></div>
+
+
+<h2>Dynamic section</h2>
+<div class="highlight"><pre>readelf -d libtest.so
+objdump -p libtest.so
+</pre></div>
+
+
+<p><code>ldd</code> also works on shared libraries.</p>
+<div class="footnote">
+<hr />
+<ol>
+<li id="fn:1">
+<p>Dynamic Shared Object&#160;<a class="footnote-backref" href="#fnref:1" rev="footnote" title="Jump back to footnote 1 in the text">&#8617;</a></p>
+</li>
+</ol>
+</div>                </article>
+            </aside><!-- /#featured -->
+                <section id="content" class="body">
+                    <h1>Other articles</h1>
+                    <hr />
+                    <ol id="posts-list" class="hfeed">
+
+            <li><article class="hentry">
+                <header>
+                    <h1><a href="//jepio.github.io/playing-with-cp.html" rel="bookmark"
+                           title="Permalink to playing with cp">playing with cp</a></h1>
+                </header>
+
+                <div class="entry-content">
 <footer class="post-info">
         <abbr class="published" title="2015-10-19T12:15:00+02:00">
                 Published: Mon 19 October 2015
@@ -39,33 +91,16 @@
         </address>
 <p>In <a href="//jepio.github.io/category/misc.html">misc</a>.</p>
 
-</footer><!-- /.post-info --><p>BTRFS breathes new air into the old <code>cp</code> command. Suddenly it can be used to
+</footer><!-- /.post-info -->                <p>BTRFS breathes new air into the old <code>cp</code> command. Suddenly it can be used to
 create instantaneous copy-on-write (CoW) snapshots of single files via <code>cp
 --reflink</code>.</p>
 <p>When you want to convert a folder to a subvolume, you are best of with the
 following commands:</p>
 <div class="highlight"><pre># mv folder folder_old
-# btrfs su create ./folder
-# cp -a --reflink ./folder_old/. folder
-</pre></div>
-
-
-<p>If you want to disable data CoW (as with <code>nodatacow</code> mount option [but which
-isn't that useful because it applies to the whole btrfs volume]) on single
-files you need apply the xattr +C to it, and defrag, or simply <code>cp</code> it (if it's
-a folder best to use <code>cp -a folder/. dest</code>).</p>
-<div class="highlight"><pre><span class="nv">$ </span>chattr +C file
-<span class="nv">$ </span>btrfs <span class="k">fi</span> defrag file <span class="c"># or</span>
-<span class="nv">$ </span>cp --reflink<span class="o">=</span>never file file.new <span class="o">&amp;&amp;</span> mv file.new file
-</pre></div>
-
-
-<p>And there you have it: cp is suddenly much more useful.</p>                </article>
-            </aside><!-- /#featured -->
-                <section id="content" class="body">
-                    <h1>Other articles</h1>
-                    <hr />
-                    <ol id="posts-list" class="hfeed">
+# btrfs su create ...</pre></div>
+                <a class="readmore" href="//jepio.github.io/playing-with-cp.html">read more</a>
+                </div><!-- /.entry-content -->
+            </article></li>
 
             <li><article class="hentry">
                 <header>

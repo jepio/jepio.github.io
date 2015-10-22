@@ -1,5 +1,33 @@
 <?xml version="1.0" encoding="utf-8"?>
-<feed xmlns="https://www.w3.org/2005/Atom"><title>Jepio's blog</title><link href="//jepio.github.io/" rel="alternate"></link><link href="//jepio.github.io/feeds/all.atom.xml" rel="self"></link><id>//jepio.github.io/</id><updated>2015-10-19T12:15:00+02:00</updated><entry><title>playing with cp</title><link href="//jepio.github.io/playing-with-cp.html" rel="alternate"></link><updated>2015-10-19T12:15:00+02:00</updated><author><name>Jepio</name></author><id>tag:jepio.github.io,2015-10-19:playing-with-cp.html</id><summary type="html">&lt;p&gt;BTRFS breathes new air into the old &lt;code&gt;cp&lt;/code&gt; command. Suddenly it can be used to
+<feed xmlns="https://www.w3.org/2005/Atom"><title>Jepio's blog</title><link href="//jepio.github.io/" rel="alternate"></link><link href="//jepio.github.io/feeds/all.atom.xml" rel="self"></link><id>//jepio.github.io/</id><updated>2015-10-21T20:15:00+02:00</updated><entry><title>printing symbol table</title><link href="//jepio.github.io/printing-symbol-table.html" rel="alternate"></link><updated>2015-10-21T20:15:00+02:00</updated><author><name>Jepio</name></author><id>tag:jepio.github.io,2015-10-21:printing-symbol-table.html</id><summary type="html">&lt;p&gt;Ever so often I want to do two things:&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;read the table of symbols exported from a shared library/executable&lt;/li&gt;
+&lt;li&gt;read the &lt;em&gt;soname&lt;/em&gt; of a library along with shared library dependencies&lt;/li&gt;
+&lt;/ol&gt;
+&lt;p&gt;Here's how to do both with 3 tools: &lt;code&gt;nm&lt;/code&gt;, &lt;code&gt;readelf&lt;/code&gt;, &lt;code&gt;objdump&lt;/code&gt;. For the sake of
+brevity I will be working on a DSO&lt;sup id="fnref:1"&gt;&lt;a class="footnote-ref" href="#fn:1" rel="footnote"&gt;1&lt;/a&gt;&lt;/sup&gt; called &lt;code&gt;libtest.so&lt;/code&gt;.&lt;/p&gt;
+&lt;h2&gt;Reading symbol table&lt;/h2&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;nm -CD libtest.so
+readelf -sD libtest.so  &lt;span class="c"&gt;# no demangling!&lt;/span&gt;
+objdump -CT libtest.so
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;h2&gt;Dynamic section&lt;/h2&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;readelf -d libtest.so
+objdump -p libtest.so
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;&lt;code&gt;ldd&lt;/code&gt; also works on shared libraries.&lt;/p&gt;
+&lt;div class="footnote"&gt;
+&lt;hr /&gt;
+&lt;ol&gt;
+&lt;li id="fn:1"&gt;
+&lt;p&gt;Dynamic Shared Object&amp;#160;&lt;a class="footnote-backref" href="#fnref:1" rev="footnote" title="Jump back to footnote 1 in the text"&gt;&amp;#8617;&lt;/a&gt;&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ol&gt;
+&lt;/div&gt;</summary></entry><entry><title>playing with cp</title><link href="//jepio.github.io/playing-with-cp.html" rel="alternate"></link><updated>2015-10-19T12:15:00+02:00</updated><author><name>Jepio</name></author><id>tag:jepio.github.io,2015-10-19:playing-with-cp.html</id><summary type="html">&lt;p&gt;BTRFS breathes new air into the old &lt;code&gt;cp&lt;/code&gt; command. Suddenly it can be used to
 create instantaneous copy-on-write (CoW) snapshots of single files via &lt;code&gt;cp
 --reflink&lt;/code&gt;.&lt;/p&gt;
 &lt;p&gt;When you want to convert a folder to a subvolume, you are best of with the

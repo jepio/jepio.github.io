@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+        <meta charset="utf-8" />
+        <title>Jepio's blog - technology</title>
+        <link rel="stylesheet" href="//jepio.github.io/theme/css/my_main.css" />
+        <link href="//jepio.github.io/feeds/all.atom.xml" type="application/atom+xml" rel="alternate" title="Jepio's blog Atom Feed" />
+
+        <!--[if IE]>
+            <script src="https://html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+        <![endif]-->
+</head>
+
+<body id="index" class="home">
+<a href="//www.github.com/jepio/jepio.github.io">
+<img style="position: absolute; top: 0; right: 0; border: 0;" src="https://s3.amazonaws.com/github/ribbons/forkme_right_red_aa0000.png" alt="Fork me on GitHub" />
+</a>
+        <header id="banner" class="body">
+                <h1><a href="//jepio.github.io/">Jepio's blog </a></h1>
+                <nav><ul>
+                    <li><a href="//jepio.github.io/category/misc.html">misc</a></li>
+                    <li><a href="//jepio.github.io/category/programming.html">programming</a></li>
+                    <li><a href="//jepio.github.io/category/shell.html">shell</a></li>
+                    <li class="active"><a href="//jepio.github.io/category/technology.html">technology</a></li>
+                    <li><a href="//jepio.github.io/category/test.html">test</a></li>
+                </ul></nav>
+        </header><!-- /#banner -->
+
+            <aside id="featured" class="body">
+                <article>
+                    <h1 class="entry-title"><a href="//jepio.github.io/finally-a-new-laptop.html">Finally a new laptop</a></h1>
+<footer class="post-info">
+        <abbr class="published" title="2015-05-29T21:23:00+02:00">
+                Published: Fri 29 May 2015
+        </abbr>
+
+        <address class="vcard author">
+                By                         <a class="url fn" href="//jepio.github.io/author/jepio.html">Jepio</a>
+        </address>
+<p>In <a href="//jepio.github.io/category/technology.html">technology</a>.</p>
+
+</footer><!-- /.post-info --><p>The time of my old laptop has come, it has finally died on me under mysterious
+circumstances<sup id="fnref:1"><a class="footnote-ref" href="#fn:1" rel="footnote">1</a></sup>. It was a Samsung R530, with a T4400 2.2 GHz dual core
+processor. Since I use <a href="https://www.gentoo.org">gentoo</a> most of the time I have to compile
+(almost) all of my packages from source, which is very demanding on the
+processor. I did not know unsuitable my old laptop was for this task until
+this weeks.</p>
+<p>I have now purchased a Thinkpad T440s, with i5-4210U with a 1.7 GHz dual core
+processor. But this time, it comes with turbo boost up to 2.7 GHz - though I
+mostly see about 2.4 GHz on the clock - and hyperthreading. I have known about
+hyperthreading for a while and because I know how it works (time slicing) I
+didn't think it was particularly exciting. I couldn't have been more wrong. It
+turns out that compiling is a sufficiently I/O heavy operation, that it can make
+reasonable usage of the hyperthreading capabilities in the processor and get a
+close to 2x boost compared to the 2 physical cores. Here's a couple of packages
+whose compile times can be compared:</p>
+<table>
+<thead>
+<tr>
+<th>package</th>
+<th>time samsung</th>
+<th>time thinkpad</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>llvm-3.6</td>
+<td>1 hour</td>
+<td>37 minutes</td>
+</tr>
+<tr>
+<td>gcc-4.9.2</td>
+<td>1 hour 40 min.</td>
+<td>36 min.</td>
+</tr>
+<tr>
+<td>boost-1.56</td>
+<td>57 min.</td>
+<td>10 min.</td>
+</tr>
+</tbody>
+</table>
+<p>Now, I must admit that the comparison for boost is probably not fair - in one
+case I built the static as well as the dynamic lib versions, and in the other
+only the dynamic libs. But the speedup is amazing nonetheless.</p>
+<p>It also seems that the Thinkpad has much better Linux support in general. I
+tested Fedora 22 and everything ACPI related worked out of the box. On Gentoo
+everything works - except for the microphone. The mic mute LED turns on at
+udev device enumeration during init and stays on, I can't get it to work.
+Anyone else experienced this? If so write me because I still haven't found a
+solution.</p>
+<div class="footnote">
+<hr />
+<ol>
+<li id="fn:1">
+<p>Not really... but let's not get into the details.&#160;<a class="footnote-backref" href="#fnref:1" rev="footnote" title="Jump back to footnote 1 in the text">&#8617;</a></p>
+</li>
+</ol>
+</div>                </article>
+            </aside><!-- /#featured -->
+        <section id="extras" class="body">
+                <div class="blogroll">
+                        <h2>blogroll</h2>
+                        <ul>
+                            <li><a href="//getpelican.com/">Pelican</a></li>
+                            <li><a href="//python.org/">Python.org</a></li>
+                            <li><a href="//jinja.pocoo.org/">Jinja2</a></li>
+                        </ul>
+                </div><!-- /.blogroll -->
+                <div class="social">
+                        <h2>social</h2>
+                        <ul>
+                            <li><a href="//jepio.github.io/feeds/all.atom.xml" type="application/atom+xml" rel="alternate">atom feed</a></li>
+
+                            <li><a href="//github.com/jepio">github</a></li>
+                            <li><a href="//twitter.com/jeremip">twitter</a></li>
+                        </ul>
+                </div><!-- /.social -->
+        </section><!-- /#extras -->
+
+        <footer id="contentinfo" class="body">
+                <address id="about" class="vcard body">
+                Proudly powered by <a href="http://getpelican.com/">Pelican</a>, which takes great advantage of <a href="http://python.org">Python</a>.
+                </address><!-- /#about -->
+
+                <p>The theme is by <a href="http://coding.smashingmagazine.com/2009/08/04/designing-a-html-5-layout-from-scratch/">Smashing Magazine</a>, thanks!</p>
+        </footer><!-- /#contentinfo -->
+
+</body>
+</html>

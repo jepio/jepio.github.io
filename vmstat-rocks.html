@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+        <meta charset="utf-8" />
+        <title>Vmstat rocks</title>
+        <link rel="stylesheet" href="//jepio.github.io/theme/css/my_main.css" />
+        <link href="//jepio.github.io/feeds/all.atom.xml" type="application/atom+xml" rel="alternate" title="Jepio's blog Atom Feed" />
+
+        <!--[if IE]>
+            <script src="https://html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+        <![endif]-->
+</head>
+
+<body id="index" class="home">
+<a href="//www.github.com/jepio/jepio.github.io">
+<img style="position: absolute; top: 0; right: 0; border: 0;" src="https://s3.amazonaws.com/github/ribbons/forkme_right_red_aa0000.png" alt="Fork me on GitHub" />
+</a>
+        <header id="banner" class="body">
+                <h1><a href="//jepio.github.io/">Jepio's blog </a></h1>
+                <nav><ul>
+                    <li class="active"><a href="//jepio.github.io/category/misc.html">misc</a></li>
+                    <li><a href="//jepio.github.io/category/programming.html">programming</a></li>
+                    <li><a href="//jepio.github.io/category/shell.html">shell</a></li>
+                    <li><a href="//jepio.github.io/category/technology.html">technology</a></li>
+                    <li><a href="//jepio.github.io/category/test.html">test</a></li>
+                </ul></nav>
+        </header><!-- /#banner -->
+<section id="content" class="body">
+  <article>
+    <header>
+      <h1 class="entry-title">
+        <a href="//jepio.github.io/vmstat-rocks.html" rel="bookmark"
+           title="Permalink to Vmstat rocks">Vmstat rocks</a></h1>
+    </header>
+
+    <div class="entry-content">
+<footer class="post-info">
+        <abbr class="published" title="2015-09-15T17:22:00+02:00">
+                Published: Tue 15 September 2015
+        </abbr>
+
+        <address class="vcard author">
+                By                         <a class="url fn" href="//jepio.github.io/author/jepio.html">Jepio</a>
+        </address>
+<p>In <a href="//jepio.github.io/category/misc.html">misc</a>.</p>
+
+</footer><!-- /.post-info -->      <p>Something I find myself doing constantly is monitoring the performance of my
+machines. CPU usage, VM (virtual memory) usage and the likes.</p>
+<p>The goto-application for this purpose is top. Top is great, and can be used on
+linux as well as BSD's, which I have been experimenting with recently, but is a
+bit too noisy most of the time. The default color settings of red + yellow make
+some items too dark and others too bright so I prefer the uncoloured output.
+This still has the downside that you see numbers/text all over the place and it
+makes it unlikely that you're going to catch a sudden change like high CPU usage
+or an application filling all your ram. You may not care about that but I do.</p>
+<p>While I mentioned portability of top as an advantage, there is a catch to it:
+the <em>tops</em> in BSD and linux differ. The BSD one is based on the classic unix top
+while the linux one is a reworked implementation. They aren't vastly different
+but it does take some getting used to. Granted, it is possible to get the
+classic top on linux but it's not available everywhere.</p>
+<p>An alternative to top has always been <code>htop</code>. I myself have been a long time fan
+of it over the classic top, and initially it was the only thing I used until I
+started being concerned about portability. It has a very good color scheme by
+default that shows mostly the same information as top but the colors allow it to
+be interpreted with greater ease. But of the major BSDs I care about, OpenBSD
+doesn't have it and it feels a bit <em>bolted on</em> in places where it is present
+(FreeBSD/NetBSD, and also OS X). So I consider it to be a Linux only feature.</p>
+<p>Another tools that I used constantly, is free paired with watch. Free gives a
+nice overview of what is happening with your memory, how it is being used for
+caching, how much is free and whether you are intensively using swap. Watch is
+what makes free an interactie tool showing you changes. All you have to do is
+open a terminal and run:</p>
+<div class="highlight"><pre>watch -n 1 free -m
+</pre></div>
+
+
+<p>and you can monitor it, without using too much space (fits perfectly within a
+small tmux pane). Both tools are part of the procps(-ng) package on linux.</p>
+<p>Now the last tool which I only most recently grew to appreciate is <code>vmstat</code>.
+Present on virtually all unices (I think) it shows all the vital system
+information in tabular form. Perfect! It gives an overview of:</p>
+<ul>
+<li>processes</li>
+<li>memory</li>
+<li>swap</li>
+<li>disk I/O</li>
+<li>interrupts and context switches</li>
+<li>CPU split</li>
+</ul>
+<p>so in one word: everything. I use it with a repeat delay of 5 and in units of
+megabyte:</p>
+<div class="highlight"><pre>vmstat -S M 5
+</pre></div>
+
+
+<p>and due to it's simplicity I think it will be my goto monitoring tool all my OSs
+for a while.</p>
+    </div><!-- /.entry-content -->
+
+  </article>
+</section>
+        <section id="extras" class="body">
+                <div class="blogroll">
+                        <h2>blogroll</h2>
+                        <ul>
+                            <li><a href="//getpelican.com/">Pelican</a></li>
+                            <li><a href="//python.org/">Python.org</a></li>
+                            <li><a href="//jinja.pocoo.org/">Jinja2</a></li>
+                        </ul>
+                </div><!-- /.blogroll -->
+                <div class="social">
+                        <h2>social</h2>
+                        <ul>
+                            <li><a href="//jepio.github.io/feeds/all.atom.xml" type="application/atom+xml" rel="alternate">atom feed</a></li>
+
+                            <li><a href="//github.com/jepio">github</a></li>
+                            <li><a href="//twitter.com/jeremip">twitter</a></li>
+                        </ul>
+                </div><!-- /.social -->
+        </section><!-- /#extras -->
+
+        <footer id="contentinfo" class="body">
+                <address id="about" class="vcard body">
+                Proudly powered by <a href="http://getpelican.com/">Pelican</a>, which takes great advantage of <a href="http://python.org">Python</a>.
+                </address><!-- /#about -->
+
+                <p>The theme is by <a href="http://coding.smashingmagazine.com/2009/08/04/designing-a-html-5-layout-from-scratch/">Smashing Magazine</a>, thanks!</p>
+        </footer><!-- /#contentinfo -->
+
+</body>
+</html>

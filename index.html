@@ -1,0 +1,615 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+        <meta charset="utf-8" />
+        <title>Jepio's blog</title>
+        <link rel="stylesheet" href="//jepio.github.io/theme/css/my_main.css" />
+        <link href="//jepio.github.io/feeds/all.atom.xml" type="application/atom+xml" rel="alternate" title="Jepio's blog Atom Feed" />
+
+        <!--[if IE]>
+            <script src="https://html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+        <![endif]-->
+</head>
+
+<body id="index" class="home">
+<a href="//www.github.com/jepio/jepio.github.io">
+<img style="position: absolute; top: 0; right: 0; border: 0;" src="https://s3.amazonaws.com/github/ribbons/forkme_right_red_aa0000.png" alt="Fork me on GitHub" />
+</a>
+        <header id="banner" class="body">
+                <h1><a href="//jepio.github.io/">Jepio's blog </a></h1>
+                <nav><ul>
+                    <li><a href="//jepio.github.io/category/misc.html">misc</a></li>
+                    <li><a href="//jepio.github.io/category/programming.html">programming</a></li>
+                    <li><a href="//jepio.github.io/category/shell.html">shell</a></li>
+                    <li><a href="//jepio.github.io/category/technology.html">technology</a></li>
+                    <li><a href="//jepio.github.io/category/test.html">test</a></li>
+                </ul></nav>
+        </header><!-- /#banner -->
+
+            <aside id="featured" class="body">
+                <article>
+                    <h1 class="entry-title"><a href="//jepio.github.io/printing-symbol-table.html">printing symbol table</a></h1>
+<footer class="post-info">
+        <abbr class="published" title="2015-10-21T20:15:00+02:00">
+                Published: Wed 21 October 2015
+        </abbr>
+
+        <address class="vcard author">
+                By                         <a class="url fn" href="//jepio.github.io/author/jepio.html">Jepio</a>
+        </address>
+<p>In <a href="//jepio.github.io/category/programming.html">programming</a>.</p>
+
+</footer><!-- /.post-info -->                </article>
+            </aside><!-- /#featured -->
+                <section id="content" class="body">
+                    <h1>Other articles</h1>
+                    <hr />
+                    <ol id="posts-list" class="hfeed">
+
+            <li><article class="hentry">
+                <header>
+                    <h1><a href="//jepio.github.io/playing-with-cp.html" rel="bookmark"
+                           title="Permalink to playing with cp">playing with cp</a></h1>
+                </header>
+
+                <div class="entry-content">
+<footer class="post-info">
+        <abbr class="published" title="2015-10-19T12:15:00+02:00">
+                Published: Mon 19 October 2015
+        </abbr>
+
+        <address class="vcard author">
+                By                         <a class="url fn" href="//jepio.github.io/author/jepio.html">Jepio</a>
+        </address>
+<p>In <a href="//jepio.github.io/category/misc.html">misc</a>.</p>
+
+</footer><!-- /.post-info -->                <p>BTRFS breathes new air into the old <code>cp</code> command. Suddenly it can be used to
+create instantaneous copy-on-write (CoW) snapshots of single files via <code>cp
+--reflink</code>.</p>
+<p>When you want to convert a folder to a subvolume, you are best of with the
+following commands:</p>
+<div class="highlight"><pre># mv folder folder_old
+# btrfs su create ...</pre></div>
+                <a class="readmore" href="//jepio.github.io/playing-with-cp.html">read more</a>
+                </div><!-- /.entry-content -->
+            </article></li>
+
+            <li><article class="hentry">
+                <header>
+                    <h1><a href="//jepio.github.io/pushing-and-popping.html" rel="bookmark"
+                           title="Permalink to pushing and popping">pushing and popping</a></h1>
+                </header>
+
+                <div class="entry-content">
+<footer class="post-info">
+        <abbr class="published" title="2015-10-09T09:24:00+02:00">
+                Published: Fri 09 October 2015
+        </abbr>
+
+        <address class="vcard author">
+                By                         <a class="url fn" href="//jepio.github.io/author/jepio.html">Jepio</a>
+        </address>
+<p>In <a href="//jepio.github.io/category/shell.html">shell</a>.</p>
+
+</footer><!-- /.post-info -->                <p>Today's blog post will be about da pushing and da poppin'. More specifically
+the shell kind.</p>
+<p><code>pushd &lt;dir&gt;</code> is like <code>cd &lt;dir&gt;</code> except that it puts your previous location on
+the directory stack before changing directory. </p>
+<p>The directory stack can be inspected with <code>dirs</code>. The <em>top</em> is on the ...</p>
+                <a class="readmore" href="//jepio.github.io/pushing-and-popping.html">read more</a>
+                </div><!-- /.entry-content -->
+            </article></li>
+
+            <li><article class="hentry">
+                <header>
+                    <h1><a href="//jepio.github.io/threads-are-processes.html" rel="bookmark"
+                           title="Permalink to Threads are processes">Threads are processes</a></h1>
+                </header>
+
+                <div class="entry-content">
+<footer class="post-info">
+        <abbr class="published" title="2015-09-22T13:12:00+02:00">
+                Published: Tue 22 September 2015
+        </abbr>
+
+        <address class="vcard author">
+                By                         <a class="url fn" href="//jepio.github.io/author/jepio.html">Jepio</a>
+        </address>
+<p>In <a href="//jepio.github.io/category/programming.html">programming</a>.</p>
+
+</footer><!-- /.post-info -->                <p>The standard thread implementation on linux is <code>pthreads</code> and processes can
+easily be created by issuing a <code>fork</code> function call. While I was studying
+processes recently and reading the man pages for <code>clone</code> I found two important
+pieces of information:</p>
+<ul>
+<li>threads are commonly implemented using <code>clone</code>.</li>
+<li>the fork function calls ...</li></ul>
+                <a class="readmore" href="//jepio.github.io/threads-are-processes.html">read more</a>
+                </div><!-- /.entry-content -->
+            </article></li>
+
+            <li><article class="hentry">
+                <header>
+                    <h1><a href="//jepio.github.io/push-rbp-mov-rsprbp.html" rel="bookmark"
+                           title="Permalink to push %rbp; mov %rsp,%rbp">push %rbp; mov %rsp,%rbp</a></h1>
+                </header>
+
+                <div class="entry-content">
+<footer class="post-info">
+        <abbr class="published" title="2015-09-22T08:57:00+02:00">
+                Published: Tue 22 September 2015
+        </abbr>
+
+        <address class="vcard author">
+                By                         <a class="url fn" href="//jepio.github.io/author/jepio.html">Jepio</a>
+        </address>
+<p>In <a href="//jepio.github.io/category/programming.html">programming</a>.</p>
+
+</footer><!-- /.post-info -->                <p>There. Do I have your attention? With this post my intention is to finally
+figure out what this pair of instructions actually mean. I mean, they show up
+everywhere. To do this I'd like to deal with a simple C example.</p>
+<div class="highlight"><pre><span class="kt">int</span> <span class="nf">main</span><span class="p">(</span><span class="kt">void</span><span class="p">)</span>
+<span class="p">{</span>
+    <span class="k">for</span> <span class="p">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i ...</span></pre></div>
+                <a class="readmore" href="//jepio.github.io/push-rbp-mov-rsprbp.html">read more</a>
+                </div><!-- /.entry-content -->
+            </article></li>
+
+            <li><article class="hentry">
+                <header>
+                    <h1><a href="//jepio.github.io/dynamic-linking-and-the-runpath.html" rel="bookmark"
+                           title="Permalink to Dynamic linking and the RUNPATH">Dynamic linking and the RUNPATH</a></h1>
+                </header>
+
+                <div class="entry-content">
+<footer class="post-info">
+        <abbr class="published" title="2015-09-21T13:18:00+02:00">
+                Published: Mon 21 September 2015
+        </abbr>
+
+        <address class="vcard author">
+                By                         <a class="url fn" href="//jepio.github.io/author/jepio.html">Jepio</a>
+        </address>
+<p>In <a href="//jepio.github.io/category/programming.html">programming</a>.</p>
+
+</footer><!-- /.post-info -->                <p>If you want to have binaries and libraries portable across linux systems, or
+even portable across locations on your filesystem, you need to know a bit about
+dynamic linking.</p>
+<p>First read <code>man ld.so</code>, this will tell you about where libraries are looked up
+when they are being searched for ...</p>
+                <a class="readmore" href="//jepio.github.io/dynamic-linking-and-the-runpath.html">read more</a>
+                </div><!-- /.entry-content -->
+            </article></li>
+
+            <li><article class="hentry">
+                <header>
+                    <h1><a href="//jepio.github.io/late-to-the-systemdinner-party.html" rel="bookmark"
+                           title="Permalink to Late to the (SystemD)inner party">Late to the (SystemD)inner party</a></h1>
+                </header>
+
+                <div class="entry-content">
+<footer class="post-info">
+        <abbr class="published" title="2015-09-21T10:28:00+02:00">
+                Published: Mon 21 September 2015
+        </abbr>
+
+        <address class="vcard author">
+                By                         <a class="url fn" href="//jepio.github.io/author/jepio.html">Jepio</a>
+        </address>
+<p>In <a href="//jepio.github.io/category/misc.html">misc</a>.</p>
+
+</footer><!-- /.post-info -->                <p>I may be coming late to the SystemD bashing party, but I'd just like to say
+that I disagree with all of the opponents of this init system. It makes sense
+to have all of the basic components in one place (journal, basic networking),
+it does speed up booting ...</p>
+                <a class="readmore" href="//jepio.github.io/late-to-the-systemdinner-party.html">read more</a>
+                </div><!-- /.entry-content -->
+            </article></li>
+
+            <li><article class="hentry">
+                <header>
+                    <h1><a href="//jepio.github.io/vmstat-rocks.html" rel="bookmark"
+                           title="Permalink to Vmstat rocks">Vmstat rocks</a></h1>
+                </header>
+
+                <div class="entry-content">
+<footer class="post-info">
+        <abbr class="published" title="2015-09-15T17:22:00+02:00">
+                Published: Tue 15 September 2015
+        </abbr>
+
+        <address class="vcard author">
+                By                         <a class="url fn" href="//jepio.github.io/author/jepio.html">Jepio</a>
+        </address>
+<p>In <a href="//jepio.github.io/category/misc.html">misc</a>.</p>
+
+</footer><!-- /.post-info -->                <p>Something I find myself doing constantly is monitoring the performance of my
+machines. CPU usage, VM (virtual memory) usage and the likes.</p>
+<p>The goto-application for this purpose is top. Top is great, and can be used on
+linux as well as BSD's, which I have been experimenting with recently ...</p>
+                <a class="readmore" href="//jepio.github.io/vmstat-rocks.html">read more</a>
+                </div><!-- /.entry-content -->
+            </article></li>
+
+            <li><article class="hentry">
+                <header>
+                    <h1><a href="//jepio.github.io/to-bsd-or-not-be.html" rel="bookmark"
+                           title="Permalink to To BSD or not be">To BSD or not be</a></h1>
+                </header>
+
+                <div class="entry-content">
+<footer class="post-info">
+        <abbr class="published" title="2015-08-30T03:30:00+02:00">
+                Published: Sun 30 August 2015
+        </abbr>
+
+        <address class="vcard author">
+                By                         <a class="url fn" href="//jepio.github.io/author/jepio.html">Jepio</a>
+        </address>
+<p>In <a href="//jepio.github.io/category/misc.html">misc</a>.</p>
+
+</footer><!-- /.post-info -->                <p>I became interested in BSD's this week. The thought of installing one on my
+hardware had been crawling around my head ever since someone told me their
+"plan for the weekend is to install an original Unix while my girlfriend is
+away".</p>
+<p>So I dived in and tried what ...</p>
+                <a class="readmore" href="//jepio.github.io/to-bsd-or-not-be.html">read more</a>
+                </div><!-- /.entry-content -->
+            </article></li>
+
+            <li><article class="hentry">
+                <header>
+                    <h1><a href="//jepio.github.io/the-actual-source-of-the-bad-battery-life-rumour-surrounding-linux.html" rel="bookmark"
+                           title="Permalink to The actual source of the bad battery life rumour surrounding linux">The actual source of the bad battery life rumour surrounding linux</a></h1>
+                </header>
+
+                <div class="entry-content">
+<footer class="post-info">
+        <abbr class="published" title="2015-08-23T19:48:00+02:00">
+                Published: Sun 23 August 2015
+        </abbr>
+
+        <address class="vcard author">
+                By                         <a class="url fn" href="//jepio.github.io/author/jepio.html">Jepio</a>
+        </address>
+<p>In <a href="//jepio.github.io/category/misc.html">misc</a>.</p>
+
+</footer><!-- /.post-info -->                <p>This one is pretty widespread and gets repeated a lot:</p>
+<blockquote>
+<p>I don't use Linux because the battery life is worse than under Windows</p>
+</blockquote>
+<p>Here's what I have to say about this.</p>
+<p>My laptop is a Haswell machine. I say Haswell, because that's not only the
+processor generation ...</p>
+                <a class="readmore" href="//jepio.github.io/the-actual-source-of-the-bad-battery-life-rumour-surrounding-linux.html">read more</a>
+                </div><!-- /.entry-content -->
+            </article></li>
+
+            <li><article class="hentry">
+                <header>
+                    <h1><a href="//jepio.github.io/more-useful-commands-for-terminal-job-management.html" rel="bookmark"
+                           title="Permalink to More useful commands for terminal job management">More useful commands for terminal job management</a></h1>
+                </header>
+
+                <div class="entry-content">
+<footer class="post-info">
+        <abbr class="published" title="2015-08-15T00:30:00+02:00">
+                Published: Sat 15 August 2015
+        </abbr>
+
+        <address class="vcard author">
+                By                         <a class="url fn" href="//jepio.github.io/author/jepio.html">Jepio</a>
+        </address>
+<p>In <a href="//jepio.github.io/category/misc.html">misc</a>.</p>
+
+</footer><!-- /.post-info -->                <p>fg/bg/jobs is for jobs within a terminal</p>
+<p>w to quickly show your terminals (that's a new one i didn't know before)
+who/whoami? useless now.</p>
+                <a class="readmore" href="//jepio.github.io/more-useful-commands-for-terminal-job-management.html">read more</a>
+                </div><!-- /.entry-content -->
+            </article></li>
+
+            <li><article class="hentry">
+                <header>
+                    <h1><a href="//jepio.github.io/command-line-clipboard-managment.html" rel="bookmark"
+                           title="Permalink to Command line clipboard managment">Command line clipboard managment</a></h1>
+                </header>
+
+                <div class="entry-content">
+<footer class="post-info">
+        <abbr class="published" title="2015-07-04T17:19:00+02:00">
+                Published: Sat 04 July 2015
+        </abbr>
+
+        <address class="vcard author">
+                By                         <a class="url fn" href="//jepio.github.io/author/jepio.html">Jepio</a>
+        </address>
+<p>In <a href="//jepio.github.io/category/misc.html">misc</a>.</p>
+
+</footer><!-- /.post-info -->                <p>I can't believe how awesome this is, it's the greatest thing to happen to me
+since I got a laptop with a physical middle button which finally made separating
+the CLIPBOARD-SELECTION buffer feasible. It's <code>xsel</code>!</p>
+<div class="highlight"><pre>xsel -b &lt; file.in
+xsel -b &gt; file.out
+</pre></div>
+
+
+<p>and more, can be ...</p>
+                <a class="readmore" href="//jepio.github.io/command-line-clipboard-managment.html">read more</a>
+                </div><!-- /.entry-content -->
+            </article></li>
+
+            <li><article class="hentry">
+                <header>
+                    <h1><a href="//jepio.github.io/where-the-hell-is-the-vectorization-report.html" rel="bookmark"
+                           title="Permalink to Where the hell is the vectorization report?">Where the hell is the vectorization report?</a></h1>
+                </header>
+
+                <div class="entry-content">
+<footer class="post-info">
+        <abbr class="published" title="2015-06-13T14:22:00+02:00">
+                Published: Sat 13 June 2015
+        </abbr>
+
+        <address class="vcard author">
+                By                         <a class="url fn" href="//jepio.github.io/author/jepio.html">Jepio</a>
+        </address>
+<p>In <a href="//jepio.github.io/category/programming.html">programming</a>.</p>
+
+</footer><!-- /.post-info -->                <p>Everyone should care about vectorization. It's relatively easy for the compiler
+to do on it's own compared to stuff like auto-parallelisation, and can yield
+high performance gains on certain parts of the code. The win can be anything
+from 2x to 8x, depending on what data type we ...</p>
+                <a class="readmore" href="//jepio.github.io/where-the-hell-is-the-vectorization-report.html">read more</a>
+                </div><!-- /.entry-content -->
+            </article></li>
+
+            <li><article class="hentry">
+                <header>
+                    <h1><a href="//jepio.github.io/pipe-buffer-in-vim.html" rel="bookmark"
+                           title="Permalink to Pipe buffer in vim">Pipe buffer in vim</a></h1>
+                </header>
+
+                <div class="entry-content">
+<footer class="post-info">
+        <abbr class="published" title="2015-06-10T01:25:00+02:00">
+                Published: Wed 10 June 2015
+        </abbr>
+
+        <address class="vcard author">
+                By                         <a class="url fn" href="//jepio.github.io/author/jepio.html">Jepio</a>
+        </address>
+<p>In <a href="//jepio.github.io/category/misc.html">misc</a>.</p>
+
+</footer><!-- /.post-info -->                <p>You can use <code>%!</code> to pipe a buffer through a unix command.</p>
+                <a class="readmore" href="//jepio.github.io/pipe-buffer-in-vim.html">read more</a>
+                </div><!-- /.entry-content -->
+            </article></li>
+
+            <li><article class="hentry">
+                <header>
+                    <h1><a href="//jepio.github.io/bashs-here-documents.html" rel="bookmark"
+                           title="Permalink to Bash's here documents">Bash's here documents</a></h1>
+                </header>
+
+                <div class="entry-content">
+<footer class="post-info">
+        <abbr class="published" title="2015-06-03T11:11:00+02:00">
+                Published: Wed 03 June 2015
+        </abbr>
+
+        <address class="vcard author">
+                By                         <a class="url fn" href="//jepio.github.io/author/jepio.html">Jepio</a>
+        </address>
+<p>In <a href="//jepio.github.io/category/programming.html">programming</a>.</p>
+
+</footer><!-- /.post-info -->                <p>I'm just about to finish reading the fantastic essay by Neal Stephanson entitled
+"<em>In the Beginning was the Command Line</em>" and I stumbled upon this quote:</p>
+<blockquote>
+<p>Unix is hard to learn. The process of learning it is one of multiple small
+epiphanies. Typically you are just on the verge ...</p></blockquote>
+                <a class="readmore" href="//jepio.github.io/bashs-here-documents.html">read more</a>
+                </div><!-- /.entry-content -->
+            </article></li>
+
+            <li><article class="hentry">
+                <header>
+                    <h1><a href="//jepio.github.io/yet-another-vim-feature-i-didnt-know-about.html" rel="bookmark"
+                           title="Permalink to Yet another vim feature I didn't know about">Yet another vim feature I didn't know about</a></h1>
+                </header>
+
+                <div class="entry-content">
+<footer class="post-info">
+        <abbr class="published" title="2015-06-01T01:27:00+02:00">
+                Published: Mon 01 June 2015
+        </abbr>
+
+        <address class="vcard author">
+                By                         <a class="url fn" href="//jepio.github.io/author/jepio.html">Jepio</a>
+        </address>
+<p>In <a href="//jepio.github.io/category/misc.html">misc</a>.</p>
+
+</footer><!-- /.post-info -->                <p>As I was editting a python script this morning, I acidentally entered <code>K</code> in
+normal mode. Vim quickly hid and revelead a shell which contained two lines:</p>
+<blockquote>
+<p>no Python documentation found for 'd'</p>
+<p>Press ENTER or type command to continue</p>
+</blockquote>
+<p><em>What is this sorcery</em>, I thought to myself. I quickly ...</p>
+                <a class="readmore" href="//jepio.github.io/yet-another-vim-feature-i-didnt-know-about.html">read more</a>
+                </div><!-- /.entry-content -->
+            </article></li>
+
+            <li><article class="hentry">
+                <header>
+                    <h1><a href="//jepio.github.io/windows-blows.html" rel="bookmark"
+                           title="Permalink to Windows... blows?">Windows... blows?</a></h1>
+                </header>
+
+                <div class="entry-content">
+<footer class="post-info">
+        <abbr class="published" title="2015-05-29T22:31:00+02:00">
+                Published: Fri 29 May 2015
+        </abbr>
+
+        <address class="vcard author">
+                By                         <a class="url fn" href="//jepio.github.io/author/jepio.html">Jepio</a>
+        </address>
+<p>In <a href="//jepio.github.io/category/misc.html">misc</a>.</p>
+
+</footer><!-- /.post-info -->                <p>I'm not usually a hater against Windows but this time I feel it's time to
+speak up. I wanted to install Windows 8 on my new laptop, but since it doesn't
+have a CD/DVD drive (and I wouldn't want it) I wanted to load the ...</p>
+                <a class="readmore" href="//jepio.github.io/windows-blows.html">read more</a>
+                </div><!-- /.entry-content -->
+            </article></li>
+
+            <li><article class="hentry">
+                <header>
+                    <h1><a href="//jepio.github.io/finally-a-new-laptop.html" rel="bookmark"
+                           title="Permalink to Finally a new laptop">Finally a new laptop</a></h1>
+                </header>
+
+                <div class="entry-content">
+<footer class="post-info">
+        <abbr class="published" title="2015-05-29T21:23:00+02:00">
+                Published: Fri 29 May 2015
+        </abbr>
+
+        <address class="vcard author">
+                By                         <a class="url fn" href="//jepio.github.io/author/jepio.html">Jepio</a>
+        </address>
+<p>In <a href="//jepio.github.io/category/technology.html">technology</a>.</p>
+
+</footer><!-- /.post-info -->                <p>The time of my old laptop has come, it has finally died on me under mysterious
+circumstances<sup id="fnref:1"><a class="footnote-ref" href="#fn:1" rel="footnote">1</a></sup>. It was a Samsung R530, with a T4400 2.2 GHz dual core
+processor. Since I use <a href="https://www.gentoo.org">gentoo</a> most of the time I have to compile
+(almost) all of my packages from ...</p>
+                <a class="readmore" href="//jepio.github.io/finally-a-new-laptop.html">read more</a>
+                </div><!-- /.entry-content -->
+            </article></li>
+
+            <li><article class="hentry">
+                <header>
+                    <h1><a href="//jepio.github.io/embedding-a-gist-in-post.html" rel="bookmark"
+                           title="Permalink to Embedding a gist in post">Embedding a gist in post</a></h1>
+                </header>
+
+                <div class="entry-content">
+<footer class="post-info">
+        <abbr class="published" title="2015-03-10T18:29:00+01:00">
+                Published: Tue 10 March 2015
+        </abbr>
+
+        <address class="vcard author">
+                By                         <a class="url fn" href="//jepio.github.io/author/jepio.html">Jepio</a>
+        </address>
+<p>In <a href="//jepio.github.io/category/test.html">test</a>.</p>
+
+</footer><!-- /.post-info -->                <p>I want to share a python trick with you, that I have found to be very useful.
+And since I want to also find out how to embed gists, I decided to use this post
+as a testing ground.</p>
+<div class="gist">
+    <script src='https://gist.github.com/e3ef019ee6e48672d81a.js?file=grouper.py'></script>
+    <noscript>
+        <pre><code>import itertools as it
+
+def grouper(iterable, n, fillvalue=None):
+    iters ...</code></pre></noscript></div>
+                <a class="readmore" href="//jepio.github.io/embedding-a-gist-in-post.html">read more</a>
+                </div><!-- /.entry-content -->
+            </article></li>
+
+            <li><article class="hentry">
+                <header>
+                    <h1><a href="//jepio.github.io/first-code-sample.html" rel="bookmark"
+                           title="Permalink to First code sample">First code sample</a></h1>
+                </header>
+
+                <div class="entry-content">
+<footer class="post-info">
+        <abbr class="published" title="2015-03-10T17:46:00+01:00">
+                Published: Tue 10 March 2015
+        </abbr>
+
+        <address class="vcard author">
+                By                         <a class="url fn" href="//jepio.github.io/author/jepio.html">Jepio</a>
+        </address>
+<p>In <a href="//jepio.github.io/category/programming.html">programming</a>.</p>
+
+</footer><!-- /.post-info -->                <p>I'm trying out the syntax highlighting extension to markdown available in
+pelican. Here it goes</p>
+<div class="highlight"><pre><span class="cp">#include &lt;vector&gt;</span>
+
+<span class="kt">int</span> <span class="nf">main</span><span class="p">()</span>
+<span class="p">{</span>
+    <span class="n">std</span><span class="o">::</span><span class="n">vector</span> <span class="n">c</span> <span class="o">=</span> <span class="p">{</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span> <span class="p">};</span>
+    <span class="k">for</span> <span class="p">(</span><span class="k">auto</span><span class="o">&amp;&amp;</span> <span class="nl">e</span> <span class="p">:</span> <span class="n">c</span><span class="p">)</span> <span class="p">{</span>
+        <span class="n">e</span> <span class="o">-=</span> <span class="mi">1</span><span class="p">;</span>
+    <span class="p">}</span>
+    <span class="k">return</span> <span class="n">c</span><span class="p">[</span><span class="mi">2</span><span class="p">];</span>
+<span class="p">}</span>
+</pre></div>
+
+
+<p>Now let's see how this looks.</p>
+                <a class="readmore" href="//jepio.github.io/first-code-sample.html">read more</a>
+                </div><!-- /.entry-content -->
+            </article></li>
+
+            <li><article class="hentry">
+                <header>
+                    <h1><a href="//jepio.github.io/my-first-post.html" rel="bookmark"
+                           title="Permalink to My first post">My first post</a></h1>
+                </header>
+
+                <div class="entry-content">
+<footer class="post-info">
+        <abbr class="published" title="2015-03-10T17:27:00+01:00">
+                Published: Tue 10 March 2015
+        </abbr>
+
+        <address class="vcard author">
+                By                         <a class="url fn" href="//jepio.github.io/author/jepio.html">Jepio</a>
+        </address>
+<p>In <a href="//jepio.github.io/category/test.html">test</a>.</p>
+
+</footer><!-- /.post-info -->                <p>This is my first post on my pelican based website. I tried Jekyll and
+JekyllBootstrap first, but since I know neither ruby nor css, I couldn't
+customize my website at all. But with a python based generator, this shouldn't
+be an issue anymore. So: <em>Hello, World</em> to you!</p>
+                <a class="readmore" href="//jepio.github.io/my-first-post.html">read more</a>
+                </div><!-- /.entry-content -->
+            </article></li>
+                </ol><!-- /#posts-list -->
+                </section><!-- /#content -->
+        <section id="extras" class="body">
+                <div class="blogroll">
+                        <h2>blogroll</h2>
+                        <ul>
+                            <li><a href="//getpelican.com/">Pelican</a></li>
+                            <li><a href="//python.org/">Python.org</a></li>
+                            <li><a href="//jinja.pocoo.org/">Jinja2</a></li>
+                        </ul>
+                </div><!-- /.blogroll -->
+                <div class="social">
+                        <h2>social</h2>
+                        <ul>
+                            <li><a href="//jepio.github.io/feeds/all.atom.xml" type="application/atom+xml" rel="alternate">atom feed</a></li>
+
+                            <li><a href="//github.com/jepio">github</a></li>
+                            <li><a href="//twitter.com/jeremip">twitter</a></li>
+                        </ul>
+                </div><!-- /.social -->
+        </section><!-- /#extras -->
+
+        <footer id="contentinfo" class="body">
+                <address id="about" class="vcard body">
+                Proudly powered by <a href="http://getpelican.com/">Pelican</a>, which takes great advantage of <a href="http://python.org">Python</a>.
+                </address><!-- /#about -->
+
+                <p>The theme is by <a href="http://coding.smashingmagazine.com/2009/08/04/designing-a-html-5-layout-from-scratch/">Smashing Magazine</a>, thanks!</p>
+        </footer><!-- /#contentinfo -->
+
+</body>
+</html>

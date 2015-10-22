@@ -1,0 +1,583 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom"><title>Jepio's blog</title><link href="//jepio.github.io/" rel="alternate"></link><link href="//jepio.github.io/feeds/all.atom.xml" rel="self"></link><id>//jepio.github.io/</id><updated>2015-10-21T20:15:00+02:00</updated><entry><title>printing symbol table</title><link href="//jepio.github.io/printing-symbol-table.html" rel="alternate"></link><updated>2015-10-21T20:15:00+02:00</updated><author><name>Jepio</name></author><id>tag:jepio.github.io,2015-10-21:printing-symbol-table.html</id><summary type="html"></summary></entry><entry><title>playing with cp</title><link href="//jepio.github.io/playing-with-cp.html" rel="alternate"></link><updated>2015-10-19T12:15:00+02:00</updated><author><name>Jepio</name></author><id>tag:jepio.github.io,2015-10-19:playing-with-cp.html</id><summary type="html">&lt;p&gt;BTRFS breathes new air into the old &lt;code&gt;cp&lt;/code&gt; command. Suddenly it can be used to
+create instantaneous copy-on-write (CoW) snapshots of single files via &lt;code&gt;cp
+--reflink&lt;/code&gt;.&lt;/p&gt;
+&lt;p&gt;When you want to convert a folder to a subvolume, you are best of with the
+following commands:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;# mv folder folder_old
+# btrfs su create ./folder
+# cp -a --reflink ./folder_old/. folder
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;If you want to disable data CoW (as with &lt;code&gt;nodatacow&lt;/code&gt; mount option [but which
+isn't that useful because it applies to the whole btrfs volume]) on single
+files you need apply the xattr +C to it, and defrag, or simply &lt;code&gt;cp&lt;/code&gt; it (if it's
+a folder best to use &lt;code&gt;cp -a folder/. dest&lt;/code&gt;).&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="nv"&gt;$ &lt;/span&gt;chattr +C file
+&lt;span class="nv"&gt;$ &lt;/span&gt;btrfs &lt;span class="k"&gt;fi&lt;/span&gt; defrag file &lt;span class="c"&gt;# or&lt;/span&gt;
+&lt;span class="nv"&gt;$ &lt;/span&gt;cp --reflink&lt;span class="o"&gt;=&lt;/span&gt;never file file.new &lt;span class="o"&gt;&amp;amp;&amp;amp;&lt;/span&gt; mv file.new file
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;And there you have it: cp is suddenly much more useful.&lt;/p&gt;</summary></entry><entry><title>pushing and popping</title><link href="//jepio.github.io/pushing-and-popping.html" rel="alternate"></link><updated>2015-10-09T09:24:00+02:00</updated><author><name>Jepio</name></author><id>tag:jepio.github.io,2015-10-09:pushing-and-popping.html</id><summary type="html">&lt;p&gt;Today's blog post will be about da pushing and da poppin'. More specifically
+the shell kind.&lt;/p&gt;
+&lt;p&gt;&lt;code&gt;pushd &amp;lt;dir&amp;gt;&lt;/code&gt; is like &lt;code&gt;cd &amp;lt;dir&amp;gt;&lt;/code&gt; except that it puts your previous location on
+the directory stack before changing directory. &lt;/p&gt;
+&lt;p&gt;The directory stack can be inspected with &lt;code&gt;dirs&lt;/code&gt;. The &lt;em&gt;top&lt;/em&gt; is on the left.&lt;/p&gt;
+&lt;p&gt;It is possible to go back to a previous directory (and pop the current one of
+the stack) using &lt;code&gt;popd&lt;/code&gt;.&lt;/p&gt;
+&lt;p&gt;This should be useful!&lt;/p&gt;</summary></entry><entry><title>Threads are processes</title><link href="//jepio.github.io/threads-are-processes.html" rel="alternate"></link><updated>2015-09-22T13:12:00+02:00</updated><author><name>Jepio</name></author><id>tag:jepio.github.io,2015-09-22:threads-are-processes.html</id><summary type="html">&lt;p&gt;The standard thread implementation on linux is &lt;code&gt;pthreads&lt;/code&gt; and processes can
+easily be created by issuing a &lt;code&gt;fork&lt;/code&gt; function call. While I was studying
+processes recently and reading the man pages for &lt;code&gt;clone&lt;/code&gt; I found two important
+pieces of information:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;threads are commonly implemented using &lt;code&gt;clone&lt;/code&gt;.&lt;/li&gt;
+&lt;li&gt;the fork function calls the &lt;code&gt;clone&lt;/code&gt; syscall.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;The conclusion from these is that on linux &lt;strong&gt;threads == processes&lt;/strong&gt;. So threads
+are in reality &lt;em&gt;processes&lt;/em&gt; with a shared address space and processes are really
+&lt;em&gt;processes&lt;/em&gt; with COW&lt;sup id="fnref:1"&gt;&lt;a class="footnote-ref" href="#fn:1" rel="footnote"&gt;1&lt;/a&gt;&lt;/sup&gt; pages. You can find confirmation in many answers on
+stackoverflow &lt;a href="http://stackoverflow.com/questions/807506/threads-vs-processes-in-linux"&gt;such as this one&lt;/a&gt;.&lt;/p&gt;
+&lt;p&gt;To me this is amazing, and kudos to the kernel devs for deciding that the two
+can be implemented in the same way and for optimizing this one path to where
+we are now.&lt;/p&gt;
+&lt;div class="footnote"&gt;
+&lt;hr /&gt;
+&lt;ol&gt;
+&lt;li id="fn:1"&gt;
+&lt;p&gt;&lt;strong&gt;C&lt;/strong&gt;opy &lt;strong&gt;O&lt;/strong&gt;n &lt;strong&gt;W&lt;/strong&gt;rite which makes spawning cheap to do.&amp;#160;&lt;a class="footnote-backref" href="#fnref:1" rev="footnote" title="Jump back to footnote 1 in the text"&gt;&amp;#8617;&lt;/a&gt;&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ol&gt;
+&lt;/div&gt;</summary></entry><entry><title>push %rbp; mov %rsp,%rbp</title><link href="//jepio.github.io/push-rbp-mov-rsprbp.html" rel="alternate"></link><updated>2015-09-22T08:57:00+02:00</updated><author><name>Jepio</name></author><id>tag:jepio.github.io,2015-09-22:push-rbp-mov-rsprbp.html</id><summary type="html">&lt;p&gt;There. Do I have your attention? With this post my intention is to finally
+figure out what this pair of instructions actually mean. I mean, they show up
+everywhere. To do this I'd like to deal with a simple C example.&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="kt"&gt;int&lt;/span&gt; &lt;span class="nf"&gt;main&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="kt"&gt;void&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;span class="p"&gt;{&lt;/span&gt;
+    &lt;span class="k"&gt;for&lt;/span&gt; &lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="kt"&gt;int&lt;/span&gt; &lt;span class="n"&gt;i&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="mi"&gt;0&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt; &lt;span class="n"&gt;i&lt;/span&gt; &lt;span class="o"&gt;&amp;lt;&lt;/span&gt; &lt;span class="mi"&gt;5&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt; &lt;span class="o"&gt;++&lt;/span&gt;&lt;span class="n"&gt;i&lt;/span&gt;&lt;span class="p"&gt;);&lt;/span&gt;
+&lt;span class="p"&gt;}&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;First let's compile it&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;gcc -g -O0 test.c -c
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;and then let's disassemble&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;objdump -S test.o
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;The output is the assembly interleaved with the source code.&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;test.o:     file format elf64-x86-64
+
+Disassembly of section .text:
+
+0000000000000000 &amp;lt;main&amp;gt;:
+int main(void)
+{
+   0:   55                      push   %rbp
+   1:   48 89 e5                mov    %rsp,%rbp
+    for (int i = 0; i &amp;lt; 5; ++i);
+   4:   c7 45 fc 00 00 00 00    movl   $0x0,-0x4(%rbp)
+   b:   eb 04                   jmp    11 &amp;lt;main+0x11&amp;gt;
+   d:   83 45 fc 01             addl   $0x1,-0x4(%rbp)
+  11:   83 7d fc 04             cmpl   $0x4,-0x4(%rbp)
+  15:   7e f6                   jle    d &amp;lt;main+0xd&amp;gt;
+  17:   b8 00 00 00 00          mov    $0x0,%eax
+}
+  1c:   5d                      pop    %rbp
+  1d:   c3                      retq
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;An interesting thing to note, and what made me write this post was the idea:&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;a loop is 5 instructions&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;and indeed it is:&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;assignment&lt;/li&gt;
+&lt;li&gt;unconditional jump to comparison&lt;/li&gt;
+&lt;li&gt;increment&lt;/li&gt;
+&lt;li&gt;comparison&lt;/li&gt;
+&lt;li&gt;conditional jump out of loop&lt;/li&gt;
+&lt;/ol&gt;
+&lt;p&gt;When I was figuring this out in my head it looked slightly different:&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;assignment&lt;/li&gt;
+&lt;li&gt;comparison&lt;/li&gt;
+&lt;li&gt;conditional jump out of loop&lt;/li&gt;
+&lt;li&gt;increment&lt;/li&gt;
+&lt;li&gt;unconditional jump to comparison&lt;/li&gt;
+&lt;/ol&gt;
+&lt;p&gt;but reordering does not change the logic.&lt;/p&gt;</summary></entry><entry><title>Dynamic linking and the RUNPATH</title><link href="//jepio.github.io/dynamic-linking-and-the-runpath.html" rel="alternate"></link><updated>2015-09-21T13:18:00+02:00</updated><author><name>Jepio</name></author><id>tag:jepio.github.io,2015-09-21:dynamic-linking-and-the-runpath.html</id><summary type="html">&lt;p&gt;If you want to have binaries and libraries portable across linux systems, or
+even portable across locations on your filesystem, you need to know a bit about
+dynamic linking.&lt;/p&gt;
+&lt;p&gt;First read &lt;code&gt;man ld.so&lt;/code&gt;, this will tell you about where libraries are looked up
+when they are being searched for during application startup. This should also
+tell you something about why using RPATH is a bad idea (it's because it
+overrides all else with a fixed location - useless).&lt;/p&gt;
+&lt;p&gt;Next you will want to see what is currently in the RUNPATH of an elf &lt;em&gt;thing&lt;/em&gt; (I
+might call this RPATH in future, with the understanding that I mean alias
+RPATH=RUNPATH). There are atleast two ways of achieving this with standard
+tools. They are&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;objdump -p &amp;lt;binary&amp;gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;and&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;readelf -d &amp;lt;binary&amp;gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;It's usually a good idea to pipe the output through&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;egrep &amp;#39;R(UN)?PATH&amp;#39;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;which catches the &lt;em&gt;legacy&lt;/em&gt; case of RPATH usage as well.&lt;/p&gt;
+&lt;p&gt;Finally, you are likely to want to modify it (I know I frequently am). Again,
+there are two tools that can do the job: &lt;code&gt;chrpath&lt;/code&gt; and &lt;code&gt;patchelf&lt;/code&gt;. They are
+very similar and can also quickly print the content of RUNPATH. Below are their
+usage strings.
+chrpath:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="n"&gt;Usage&lt;/span&gt;&lt;span class="o"&gt;:&lt;/span&gt; &lt;span class="n"&gt;chrpath&lt;/span&gt; &lt;span class="o"&gt;[-&lt;/span&gt;&lt;span class="n"&gt;v&lt;/span&gt;&lt;span class="o"&gt;|-&lt;/span&gt;&lt;span class="n"&gt;d&lt;/span&gt;&lt;span class="o"&gt;|-&lt;/span&gt;&lt;span class="n"&gt;c&lt;/span&gt;&lt;span class="o"&gt;|-&lt;/span&gt;&lt;span class="n"&gt;r&lt;/span&gt; &lt;span class="o"&gt;&amp;lt;&lt;/span&gt;&lt;span class="n"&gt;path&lt;/span&gt;&lt;span class="o"&gt;&amp;gt;]&lt;/span&gt; &lt;span class="o"&gt;&amp;lt;&lt;/span&gt;&lt;span class="n"&gt;program&lt;/span&gt;&lt;span class="o"&gt;&amp;gt;&lt;/span&gt; &lt;span class="o"&gt;[&amp;lt;&lt;/span&gt;&lt;span class="n"&gt;program&lt;/span&gt;&lt;span class="o"&gt;&amp;gt;&lt;/span&gt; &lt;span class="o"&gt;...]&lt;/span&gt;
+
+   &lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="n"&gt;v&lt;/span&gt;&lt;span class="o"&gt;|--&lt;/span&gt;&lt;span class="n"&gt;version&lt;/span&gt;                &lt;span class="n"&gt;Display&lt;/span&gt; &lt;span class="n"&gt;program&lt;/span&gt; &lt;span class="n"&gt;version&lt;/span&gt; &lt;span class="n"&gt;number&lt;/span&gt;
+   &lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="n"&gt;d&lt;/span&gt;&lt;span class="o"&gt;|--&lt;/span&gt;&lt;span class="n"&gt;delete&lt;/span&gt;                 &lt;span class="n"&gt;Delete&lt;/span&gt; &lt;span class="n"&gt;current&lt;/span&gt; &lt;span class="n"&gt;rpath&lt;/span&gt;&lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="n"&gt;runpath&lt;/span&gt; &lt;span class="n"&gt;setting&lt;/span&gt;
+   &lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="n"&gt;c&lt;/span&gt;&lt;span class="o"&gt;|--&lt;/span&gt;&lt;span class="n"&gt;convert&lt;/span&gt;                &lt;span class="n"&gt;Convert&lt;/span&gt; &lt;span class="n"&gt;rpath&lt;/span&gt; &lt;span class="n"&gt;to&lt;/span&gt; &lt;span class="n"&gt;runpath&lt;/span&gt;
+   &lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="n"&gt;r&lt;/span&gt; &lt;span class="o"&gt;&amp;lt;&lt;/span&gt;&lt;span class="n"&gt;path&lt;/span&gt;&lt;span class="o"&gt;&amp;gt;|--&lt;/span&gt;&lt;span class="n"&gt;replace&lt;/span&gt; &lt;span class="o"&gt;&amp;lt;&lt;/span&gt;&lt;span class="n"&gt;path&lt;/span&gt;&lt;span class="o"&gt;&amp;gt;&lt;/span&gt;  &lt;span class="n"&gt;Replace&lt;/span&gt; &lt;span class="n"&gt;current&lt;/span&gt; &lt;span class="n"&gt;rpath&lt;/span&gt;&lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="n"&gt;runpath&lt;/span&gt; &lt;span class="n"&gt;setting&lt;/span&gt;
+                               &lt;span class="k"&gt;with&lt;/span&gt; &lt;span class="n"&gt;the&lt;/span&gt; &lt;span class="n"&gt;path&lt;/span&gt; &lt;span class="n"&gt;given&lt;/span&gt;
+   &lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="n"&gt;l&lt;/span&gt;&lt;span class="o"&gt;|--&lt;/span&gt;&lt;span class="n"&gt;list&lt;/span&gt;                   &lt;span class="n"&gt;List&lt;/span&gt; &lt;span class="n"&gt;the&lt;/span&gt; &lt;span class="n"&gt;current&lt;/span&gt; &lt;span class="n"&gt;rpath&lt;/span&gt;&lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="n"&gt;runpath&lt;/span&gt; &lt;span class="o"&gt;(&lt;/span&gt;&lt;span class="k"&gt;default&lt;/span&gt;&lt;span class="o"&gt;)&lt;/span&gt;
+   &lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="n"&gt;k&lt;/span&gt;&lt;span class="o"&gt;|--&lt;/span&gt;&lt;span class="n"&gt;keepgoing&lt;/span&gt;              &lt;span class="n"&gt;Continue&lt;/span&gt; &lt;span class="k"&gt;as&lt;/span&gt; &lt;span class="n"&gt;much&lt;/span&gt; &lt;span class="k"&gt;as&lt;/span&gt; &lt;span class="n"&gt;possible&lt;/span&gt; &lt;span class="n"&gt;after&lt;/span&gt; &lt;span class="n"&gt;an&lt;/span&gt; &lt;span class="n"&gt;error&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;
+   &lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="n"&gt;h&lt;/span&gt;&lt;span class="o"&gt;|--&lt;/span&gt;&lt;span class="n"&gt;help&lt;/span&gt;                   &lt;span class="n"&gt;Show&lt;/span&gt; &lt;span class="k"&gt;this&lt;/span&gt; &lt;span class="n"&gt;usage&lt;/span&gt; &lt;span class="n"&gt;information&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;patchelf:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="n"&gt;syntax&lt;/span&gt;&lt;span class="o"&gt;:&lt;/span&gt; &lt;span class="n"&gt;patchelf&lt;/span&gt;
+  &lt;span class="o"&gt;[--&lt;/span&gt;&lt;span class="kd"&gt;set&lt;/span&gt;&lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="n"&gt;interpreter&lt;/span&gt; &lt;span class="n"&gt;FILENAME&lt;/span&gt;&lt;span class="o"&gt;]&lt;/span&gt;
+  &lt;span class="o"&gt;[--&lt;/span&gt;&lt;span class="n"&gt;print&lt;/span&gt;&lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="n"&gt;interpreter&lt;/span&gt;&lt;span class="o"&gt;]&lt;/span&gt;
+  &lt;span class="o"&gt;[--&lt;/span&gt;&lt;span class="kd"&gt;set&lt;/span&gt;&lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="n"&gt;rpath&lt;/span&gt; &lt;span class="n"&gt;RPATH&lt;/span&gt;&lt;span class="o"&gt;]&lt;/span&gt;
+  &lt;span class="o"&gt;[--&lt;/span&gt;&lt;span class="n"&gt;shrink&lt;/span&gt;&lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="n"&gt;rpath&lt;/span&gt;&lt;span class="o"&gt;]&lt;/span&gt;
+  &lt;span class="o"&gt;[--&lt;/span&gt;&lt;span class="n"&gt;print&lt;/span&gt;&lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="n"&gt;rpath&lt;/span&gt;&lt;span class="o"&gt;]&lt;/span&gt;
+  &lt;span class="o"&gt;[--&lt;/span&gt;&lt;span class="n"&gt;force&lt;/span&gt;&lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="n"&gt;rpath&lt;/span&gt;&lt;span class="o"&gt;]&lt;/span&gt;
+  &lt;span class="o"&gt;[--&lt;/span&gt;&lt;span class="n"&gt;remove&lt;/span&gt;&lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="n"&gt;needed&lt;/span&gt; &lt;span class="n"&gt;LIBRARY&lt;/span&gt;&lt;span class="o"&gt;]&lt;/span&gt;
+  &lt;span class="o"&gt;[--&lt;/span&gt;&lt;span class="n"&gt;debug&lt;/span&gt;&lt;span class="o"&gt;]&lt;/span&gt;
+  &lt;span class="o"&gt;[--&lt;/span&gt;&lt;span class="n"&gt;version&lt;/span&gt;&lt;span class="o"&gt;]&lt;/span&gt;
+  &lt;span class="n"&gt;FILENAME&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;&lt;code&gt;patchelf&lt;/code&gt; was developed by the &lt;a href="//nixos.org/nix"&gt;nixos&lt;/a&gt; people, who depend on it to make
+their whole idea of a package manager work.&lt;/p&gt;</summary></entry><entry><title>Late to the (SystemD)inner party</title><link href="//jepio.github.io/late-to-the-systemdinner-party.html" rel="alternate"></link><updated>2015-09-21T10:28:00+02:00</updated><author><name>Jepio</name></author><id>tag:jepio.github.io,2015-09-21:late-to-the-systemdinner-party.html</id><summary type="html">&lt;p&gt;I may be coming late to the SystemD bashing party, but I'd just like to say
+that I disagree with all of the opponents of this init system. It makes sense
+to have all of the basic components in one place (journal, basic networking),
+it does speed up booting and as far as I know has a solid code base.&lt;/p&gt;
+&lt;p&gt;Feeling your &lt;em&gt;unix philosophy&lt;/em&gt; has been violated? How has &lt;em&gt;it&lt;/em&gt; benefited you
+in this case before? The init system is not something that you run in your
+shell where piping, composition and all this nice stuff makes sense. It runs
+before you have a chance to mess with the system and for all you should care it
+should not get in the way.&lt;/p&gt;
+&lt;p&gt;Systemd makes administering systems easier, my knowledge is more portable
+thanks to it and the wide adoption. This also means that there probably are
+more people who like it (or don't give a fuck) than those that criticize it. So
+deal with it.&lt;/p&gt;</summary></entry><entry><title>Vmstat rocks</title><link href="//jepio.github.io/vmstat-rocks.html" rel="alternate"></link><updated>2015-09-15T17:22:00+02:00</updated><author><name>Jepio</name></author><id>tag:jepio.github.io,2015-09-15:vmstat-rocks.html</id><summary type="html">&lt;p&gt;Something I find myself doing constantly is monitoring the performance of my
+machines. CPU usage, VM (virtual memory) usage and the likes.&lt;/p&gt;
+&lt;p&gt;The goto-application for this purpose is top. Top is great, and can be used on
+linux as well as BSD's, which I have been experimenting with recently, but is a
+bit too noisy most of the time. The default color settings of red + yellow make
+some items too dark and others too bright so I prefer the uncoloured output.
+This still has the downside that you see numbers/text all over the place and it
+makes it unlikely that you're going to catch a sudden change like high CPU usage
+or an application filling all your ram. You may not care about that but I do.&lt;/p&gt;
+&lt;p&gt;While I mentioned portability of top as an advantage, there is a catch to it:
+the &lt;em&gt;tops&lt;/em&gt; in BSD and linux differ. The BSD one is based on the classic unix top
+while the linux one is a reworked implementation. They aren't vastly different
+but it does take some getting used to. Granted, it is possible to get the
+classic top on linux but it's not available everywhere.&lt;/p&gt;
+&lt;p&gt;An alternative to top has always been &lt;code&gt;htop&lt;/code&gt;. I myself have been a long time fan
+of it over the classic top, and initially it was the only thing I used until I
+started being concerned about portability. It has a very good color scheme by
+default that shows mostly the same information as top but the colors allow it to
+be interpreted with greater ease. But of the major BSDs I care about, OpenBSD
+doesn't have it and it feels a bit &lt;em&gt;bolted on&lt;/em&gt; in places where it is present
+(FreeBSD/NetBSD, and also OS X). So I consider it to be a Linux only feature.&lt;/p&gt;
+&lt;p&gt;Another tools that I used constantly, is free paired with watch. Free gives a
+nice overview of what is happening with your memory, how it is being used for
+caching, how much is free and whether you are intensively using swap. Watch is
+what makes free an interactie tool showing you changes. All you have to do is
+open a terminal and run:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;watch -n 1 free -m
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;and you can monitor it, without using too much space (fits perfectly within a
+small tmux pane). Both tools are part of the procps(-ng) package on linux.&lt;/p&gt;
+&lt;p&gt;Now the last tool which I only most recently grew to appreciate is &lt;code&gt;vmstat&lt;/code&gt;.
+Present on virtually all unices (I think) it shows all the vital system
+information in tabular form. Perfect! It gives an overview of:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;processes&lt;/li&gt;
+&lt;li&gt;memory&lt;/li&gt;
+&lt;li&gt;swap&lt;/li&gt;
+&lt;li&gt;disk I/O&lt;/li&gt;
+&lt;li&gt;interrupts and context switches&lt;/li&gt;
+&lt;li&gt;CPU split&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;so in one word: everything. I use it with a repeat delay of 5 and in units of
+megabyte:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;vmstat -S M 5
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;and due to it's simplicity I think it will be my goto monitoring tool all my OSs
+for a while.&lt;/p&gt;</summary></entry><entry><title>To BSD or not be</title><link href="//jepio.github.io/to-bsd-or-not-be.html" rel="alternate"></link><updated>2015-08-30T03:30:00+02:00</updated><author><name>Jepio</name></author><id>tag:jepio.github.io,2015-08-30:to-bsd-or-not-be.html</id><summary type="html">&lt;p&gt;I became interested in BSD's this week. The thought of installing one on my
+hardware had been crawling around my head ever since someone told me their
+"plan for the weekend is to install an original Unix while my girlfriend is
+away".&lt;/p&gt;
+&lt;p&gt;So I dived in and tried what I believe to be the 3 most popular and root
+distributions: NetBSD, FreeBSD, OpenBSD. I cared about 3 things: support for
+EFI booting, GPT, and WiFi.&lt;/p&gt;
+&lt;p&gt;First I had to dig through lots of (what I consider to be) legacy information
+about slices, wedges and (BSD) disklabels.&lt;/p&gt;
+&lt;p&gt;FreeBSD has an EFI boot loader, supports GPT but the iwm module panic the
+kernel about 80% of the time.&lt;/p&gt;
+&lt;p&gt;NetBSD supports GPT, doesn't have an EFI bootloader and WiFi works 90% of the
+time. Only sometimes does it decide to show me the middle finger.&lt;/p&gt;
+&lt;p&gt;OpenBSD doesn't support GPT, nor EFI, and I can't test the WiFi because the
+firmware needs to be downloaded after the install. Talk of planning right
+there... Someone is working on EFI and GPT upstream which works in a virtual
+machine, but I'm having problems installing it onto a real hard drive.&lt;/p&gt;
+&lt;p&gt;Update:
+So FreeBSD is still unusable due to the WiFi-related panics. NetBSD seems to
+have decided that after initially working quite correctly with respect to the
+WiFi, the wpa-supplicant is incorrect for it. So now on boot it stalls at the
+WiFi configuration until I cancel. Since I don't have time to figure these
+things out right now, I'll leave it for a better time.&lt;/p&gt;
+&lt;p&gt;OpenBSD appears to work quite well if you ignore the not-obvious mechanics of
+mixing &lt;strong&gt;experimental&lt;/strong&gt; GPT support with classic BSD disklabels. I made 1
+OpenBSD partition and within that 4 labels: /, swap, /usr, /var. But when using
+&lt;code&gt;disklabel&lt;/code&gt; it also showed me &lt;em&gt;some&lt;/em&gt; of the other partitions that I had on that
+hard drive. Some, because I have 16 GPT partitions + the 4 OpenBSD ones and only
+16 total are supported by disklabel.&lt;/p&gt;
+&lt;p&gt;When it comes to booting I can boot FreeBSD using only their bootloader, fully in
+EFI mode. NetBSD can be booted as a kernel from EFI grub. The only one that
+can't be booted in EFI mode is OpenBSD. Although that is being worked on.&lt;/p&gt;
+&lt;p&gt;On the bright side, all of the things I was testing are part of *BSD-CURRENT.
+This goes especially for the iwm module used by my Intel 7260 chip. It was first
+introduced to OpenBSD, then NetBSD copied it and finally it made it's way into
+FreeBSD. So hopefully once the rough edges are ironed out things will be up to
+this years par some time next year (or in November in the case of OpenBSD). I'll
+definitely keep tracking the progress, but for now I'll experiment with FreeBSD
+in a VM.&lt;/p&gt;</summary></entry><entry><title>The actual source of the bad battery life rumour surrounding linux</title><link href="//jepio.github.io/the-actual-source-of-the-bad-battery-life-rumour-surrounding-linux.html" rel="alternate"></link><updated>2015-08-23T19:48:00+02:00</updated><author><name>Jepio</name></author><id>tag:jepio.github.io,2015-08-23:the-actual-source-of-the-bad-battery-life-rumour-surrounding-linux.html</id><summary type="html">&lt;p&gt;This one is pretty widespread and gets repeated a lot:&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;I don't use Linux because the battery life is worse than under Windows&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;Here's what I have to say about this.&lt;/p&gt;
+&lt;p&gt;My laptop is a Haswell machine. I say Haswell, because that's not only the
+processor generation right there - it's also the chipset, DRAM controller
+and GPU. What that means is that everything works together as a &lt;em&gt;package&lt;/em&gt;
+to deliver the lowest power usage possible. And it does that quite well -
+most of the time. &lt;/p&gt;
+&lt;p&gt;The kernel itself is pretty good with handling battery life. All tweaks
+that can be made are built into the kernel and can be modified through
+either the proc or sys filesystems. Some of them are activated by default -
+like CPU scaling. Others are best left in the hands of a tool that can
+change the settings based on whether external power is connected - I used
+to be a &lt;a href="http://www.samwel.tk/laptop_mode/"&gt;Laptop Mode Tools&lt;/a&gt; guy but lately I have turned to &lt;a href="http://linrunner.de/en/tlp/docs/tlp-linux-advanced-power-management.html"&gt;TLP&lt;/a&gt;
+(since I have a Thinkpad). TLP requires a little less tweaking but both do
+the same thing. I have also heard of jupiter and pm-utils but the former is
+(from what I heard) dead and the latter I have not investigated.&lt;/p&gt;
+&lt;p&gt;The ultimate tool that every laptop user should have running almost
+constantly is &lt;a href="https://01.org/powertop"&gt;PowerTop&lt;/a&gt;. As the name suggests, it's a top-like
+program for displaying power drain. Originally written by Intel, it's
+probably best suited for use with their hardware but most of the
+functionality should work with AMD processors as well. PowerTop has a
+tabbed ncurses interface and shows the following information:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;summary screen with power estimate by process along with a 
+  wakeup-per-second count - kill high wake-up applications&lt;/li&gt;
+&lt;li&gt;package/core/gpu power state view - tells you if your hardware is
+  sitting in the lowest power states enough.&lt;/li&gt;
+&lt;li&gt;processor frequency breakdown - allows you to notice when your
+  hardware is not down-clocking enough.&lt;/li&gt;
+&lt;li&gt;per device power usage estimates - the precision is suspicious but if
+  a device is draining a lot of power maybe it's best to disconnect it.&lt;/li&gt;
+&lt;li&gt;tunables - tune the most common system settings.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;The first four have helped me multiple times to name a few. They allow me to
+identify when an application is responsible for more power usage than I
+would have expected. When a kernel bug stopped my laptop from reaching
+package power states lower than PC2, I could find that out and reboot
+instead of wasting power. When something strange had set my min and max
+processor frequencies to 100%, I had the chance to notice and fix that.
+My bluetooth was turning on after being blocked on every resume, and I saw
+that through the device stats tab. So if you care at all about power usage,
+PowerTop is your friend.&lt;/p&gt;
+&lt;p&gt;Thanks to this utility I can also give some numbers to back up my claims of
+&lt;em&gt;good&lt;/em&gt; Linux battery life. When my laptop idles with the screen off it uses
+around 4 W. When watching a movie I have seen constant power drain of 6.5
+W, thanks to &lt;strong&gt;hardware accelerated decoding&lt;/strong&gt;. I'll come back to this
+later. Normal usage email, web, some text editing keeps me at between 7 and 9 W.
+I consider all of these values, especially the movie watching usage, to be
+very good.&lt;/p&gt;
+&lt;p&gt;The only thing that really kills Linux laptops is flash. Or the lack
+thereof. Flash is everywhere on the web (still) even though it has had
+countless security advisories to prove it should be killed a long time ago.
+What's more, the Linux version from Adobe does not get new features and is
+only eligible for security updates. This means it does not have hardware
+acceleration like the windows version, which leads to &lt;strong&gt;insane&lt;/strong&gt; power
+usage. And by insane I mean 12-15 W are not unusual. This effectively cuts
+my battery life in half. The real killer here is youtube. While google is
+moving it away from flash towards HTML5, the HTML5 does not make it any
+better. Chrome does not use acceleration on Linux, and Firefox is not ready
+for it by default either (even with gstreamer it does not work particularly
+well for me). The adobe alternatives - lightspark, gnash - did not show
+better results when I tested them.&lt;/p&gt;
+&lt;p&gt;So for me the conclusion is easy - if you want battery life, don't use
+youtube. Or rather, don't use youtube in your browser. I have had much
+better results with listening to youtube music through mps-youtube, a
+python program for streaming from youtube from the command line. But aside 
+from that I am satisfied with my laptop's performance. We have come a long
+way and the next objective should be to accelerate HTML5 on the web. Of course
+distributions should also pay extra attention to this aspect and enable many 
+power saving settings by default.&lt;/p&gt;</summary></entry><entry><title>More useful commands for terminal job management</title><link href="//jepio.github.io/more-useful-commands-for-terminal-job-management.html" rel="alternate"></link><updated>2015-08-15T00:30:00+02:00</updated><author><name>Jepio</name></author><id>tag:jepio.github.io,2015-08-15:more-useful-commands-for-terminal-job-management.html</id><summary type="html">&lt;p&gt;fg/bg/jobs is for jobs within a terminal&lt;/p&gt;
+&lt;p&gt;w to quickly show your terminals (that's a new one i didn't know before)
+who/whoami? useless now.&lt;/p&gt;</summary></entry><entry><title>Command line clipboard managment</title><link href="//jepio.github.io/command-line-clipboard-managment.html" rel="alternate"></link><updated>2015-07-04T17:19:00+02:00</updated><author><name>Jepio</name></author><id>tag:jepio.github.io,2015-07-04:command-line-clipboard-managment.html</id><summary type="html">&lt;p&gt;I can't believe how awesome this is, it's the greatest thing to happen to me
+since I got a laptop with a physical middle button which finally made separating
+the CLIPBOARD-SELECTION buffer feasible. It's &lt;code&gt;xsel&lt;/code&gt;!&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;xsel -b &amp;lt; file.in
+xsel -b &amp;gt; file.out
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;and more, can be found in &lt;code&gt;man xsel&lt;/code&gt;. It's awesome.&lt;/p&gt;</summary></entry><entry><title>Where the hell is the vectorization report?</title><link href="//jepio.github.io/where-the-hell-is-the-vectorization-report.html" rel="alternate"></link><updated>2015-06-13T14:22:00+02:00</updated><author><name>Jepio</name></author><id>tag:jepio.github.io,2015-06-13:where-the-hell-is-the-vectorization-report.html</id><summary type="html">&lt;p&gt;Everyone should care about vectorization. It's relatively easy for the compiler
+to do on it's own compared to stuff like auto-parallelisation, and can yield
+high performance gains on certain parts of the code. The win can be anything
+from 2x to 8x, depending on what data type we're using and what kinds of
+instructions our processor supports. The only condition is that we have to write
+easy code that shows the compiler everything it needs to know to determine
+whether it's safe to vectorize.&lt;/p&gt;
+&lt;p&gt;Most of the time we talk about vectorization of loops. It so happens that in
+both clang and gcc the vectorizer is turned on automatically at &lt;code&gt;-O3&lt;/code&gt;
+optimization flags &lt;sup id="fnref:1"&gt;&lt;a class="footnote-ref" href="#fn:1" rel="footnote"&gt;1&lt;/a&gt;&lt;/sup&gt;. What we're interested in is knowing how well it does.
+And I don't mean benchmarking or profiling - we need to know if it has done its
+job.  That's what vectorization reports are there for. Clang has a fairly large
+set of flags to inform you of what went on behind your back:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;-Rpass=loop-vectorize
+-Rpass-missed=loop-vectorize
+-Rpass-analysis=loop-vectorize
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;I pretty much use all of them at the same time, everytime. You turn on the first
+one and you see nothing, so you turn on the second one and it tells you that
+this and that loop failed to be vectorized. Finally you have to turn on that
+last one to find out why. There really ought to be a flag that turns all of them
+on - something like &lt;code&gt;-fvectorize-report&lt;/code&gt;.&lt;/p&gt;
+&lt;p&gt;But that's nothing compared to the trouble that gcc caused me. Like a good
+citizen I open up my browser and search for &lt;em&gt;gcc autovectorization&lt;/em&gt;. With
+joy I remark that the first link leads to the GNU project website dealing with
+&lt;a href="https://gcc.gnu.org/projects/tree-ssa/vectorization.html"&gt;Auto-vectorization in GCC&lt;/a&gt;. But when I get there, it tells me to use
+&lt;code&gt;-ftree-vectorizer-verbose=N&lt;/code&gt; to turn on a verbose vectorization report. Seems
+reasonable, I think to myself, and start experimenting with it. But it doesn't
+work in GCC 4.9.2. I get no report of anything, neither failures nor successes.
+And on top of that, no warning/error message telling me that the flag doesn't
+work. Luckily the internet has other websites and the LHCb twiki website tells
+me that this flag is depracated in GCC 4.9. Someone should notify GNU of
+that&lt;sup id="fnref:2"&gt;&lt;a class="footnote-ref" href="#fn:2" rel="footnote"&gt;2&lt;/a&gt;&lt;/sup&gt;! The new flags are:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;-fopt-info-vec
+-fopt-info-vec-missed
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;You learn something new every day.&lt;/p&gt;
+&lt;div class="footnote"&gt;
+&lt;hr /&gt;
+&lt;ol&gt;
+&lt;li id="fn:1"&gt;
+&lt;p&gt;Clang might have vectorization enabled by default, I haven't really looked
+into it.&amp;#160;&lt;a class="footnote-backref" href="#fnref:1" rev="footnote" title="Jump back to footnote 1 in the text"&gt;&amp;#8617;&lt;/a&gt;&lt;/p&gt;
+&lt;/li&gt;
+&lt;li id="fn:2"&gt;
+&lt;p&gt;Don't worry, I plan on doing that myself and this post will help remind me
+of that.&amp;#160;&lt;a class="footnote-backref" href="#fnref:2" rev="footnote" title="Jump back to footnote 2 in the text"&gt;&amp;#8617;&lt;/a&gt;&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ol&gt;
+&lt;/div&gt;</summary></entry><entry><title>Pipe buffer in vim</title><link href="//jepio.github.io/pipe-buffer-in-vim.html" rel="alternate"></link><updated>2015-06-10T01:25:00+02:00</updated><author><name>Jepio</name></author><id>tag:jepio.github.io,2015-06-10:pipe-buffer-in-vim.html</id><summary type="html">&lt;p&gt;You can use &lt;code&gt;%!&lt;/code&gt; to pipe a buffer through a unix command.&lt;/p&gt;</summary></entry><entry><title>Bash's here documents</title><link href="//jepio.github.io/bashs-here-documents.html" rel="alternate"></link><updated>2015-06-03T11:11:00+02:00</updated><author><name>Jepio</name></author><id>tag:jepio.github.io,2015-06-03:bashs-here-documents.html</id><summary type="html">&lt;p&gt;I'm just about to finish reading the fantastic essay by Neal Stephanson entitled
+"&lt;em&gt;In the Beginning was the Command Line&lt;/em&gt;" and I stumbled upon this quote:&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;Unix is hard to learn. The process of learning it is one of multiple small
+epiphanies. Typically you are just on the verge of inventing some necessary
+tool or utility when you realize that someone else has already invented it, and
+built it in, and this explains some odd file or directory or command that you
+have noticed but never really understood before.&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;In the essay it appears not far from a reference to this very old dilbert
+comics:
+&lt;img alt="unix hacker" src="//jepio.github.io/images/unix-hacker.png" /&gt;&lt;/p&gt;
+&lt;p&gt;Now I thought it's worth mentioning these two things because of what I'm
+about to write about next. My biggest complaint against
+&lt;a href="//www.gnuplot.info"&gt;gnuplot&lt;/a&gt; has always been that it is missing bash-like
+features - access to utilities for basic data processing, simple looping. This
+makes it hard to work with for anything but the simplest plotting scripts.
+Instead I always reached for python's matplotlib library, which I love to hate,
+whenever I had to perform a more demanding task.&lt;/p&gt;
+&lt;p&gt;I was aware of the possibility of somehow calling gnuplot from inside bash, but
+this never appealed to me. It seemed to be a &lt;em&gt;forced&lt;/em&gt;, not elegant, solution to
+the problem at hand. But it wasn't until today that it finally dawned on me that
+this is actually &lt;strong&gt;the&lt;/strong&gt; right solution and I decided to write about it.&lt;/p&gt;
+&lt;p&gt;The bash syntax I am referring to is called &lt;code&gt;Here Documents&lt;/code&gt;. Inside a script
+you double redirect (kind of like append) to stdin the word &lt;code&gt;EOF&lt;/code&gt;. Everything
+entered after this point will be entered into the application you are calling,
+until it hits the word &lt;code&gt;EOF&lt;/code&gt;, the exact same one that you specified. You can use
+bash variables inside the &lt;em&gt;document&lt;/em&gt; and everything will be expanded properly.
+It works with everything: python, gnuplot, you name it. I have often felt the
+need to call out from bash to python because python's syntax is so much simpler.
+Now I have a way:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="c"&gt;#!/bin/sh&lt;/span&gt;
+
+python3 &lt;span class="s"&gt;&amp;lt;&amp;lt; EOF&lt;/span&gt;
+&lt;span class="s"&gt;print(&amp;quot;$*&amp;quot;)&lt;/span&gt;
+&lt;span class="s"&gt;EOF&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;Calling this script is equivalent to doing &lt;code&gt;echo&lt;/code&gt;, but probably does not cover
+many corner cases.&lt;/p&gt;
+&lt;p&gt;Still, I now feel comfortable with using this feature the next time I need to
+work with gnuplot. And like Neal wrote, it took an epiphany for me to realise
+that gnuplot does not need to have bash built into it to be useful, it is enough
+that it can handle arbitrary textual input from the outside.&lt;/p&gt;</summary></entry><entry><title>Yet another vim feature I didn't know about</title><link href="//jepio.github.io/yet-another-vim-feature-i-didnt-know-about.html" rel="alternate"></link><updated>2015-06-01T01:27:00+02:00</updated><author><name>Jepio</name></author><id>tag:jepio.github.io,2015-06-01:yet-another-vim-feature-i-didnt-know-about.html</id><summary type="html">&lt;p&gt;As I was editting a python script this morning, I acidentally entered &lt;code&gt;K&lt;/code&gt; in
+normal mode. Vim quickly hid and revelead a shell which contained two lines:&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;no Python documentation found for 'd'&lt;/p&gt;
+&lt;p&gt;Press ENTER or type command to continue&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;&lt;em&gt;What is this sorcery&lt;/em&gt;, I thought to myself. I quickly googled but couldn't
+quite find an answer. Then I remembered vim's built-in help system and it
+revealed the following:&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;K&lt;/p&gt;
+&lt;p&gt;Run a program to lookup the keyword under the cursor.&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;Cool, ain't it? It uses the program specified by the variable &lt;code&gt;keywordprg&lt;/code&gt;, the
+default is &lt;code&gt;man -s&lt;/code&gt; but for python files it changes to &lt;code&gt;pydoc&lt;/code&gt;. That's something
+worth remembering.&lt;/p&gt;</summary></entry><entry><title>Windows... blows?</title><link href="//jepio.github.io/windows-blows.html" rel="alternate"></link><updated>2015-05-29T22:31:00+02:00</updated><author><name>Jepio</name></author><id>tag:jepio.github.io,2015-05-29:windows-blows.html</id><summary type="html">&lt;p&gt;I'm not usually a hater against Windows but this time I feel it's time to
+speak up. I wanted to install Windows 8 on my new laptop, but since it doesn't
+have a CD/DVD drive (and I wouldn't want it) I wanted to load the ISO onto a USB
+stick to install from. Now I didn't have a USB stick until last week when I went
+to the store to buy one. As I was looking at the shelves in Saturn I was sure I
+wanted a USB 3.0 pendrive with the greatest possible read/write speeds.&lt;/p&gt;
+&lt;p&gt;So I bought a Sandisk pendrive and was happy with my choice until today. That's
+not to say I'm not, because it has everything I hoped for. The problem lies in
+Windows. You see, it's not possible to install Windows from a USB 3.0 pendrive
+since that requires drivers. And to load these drivers I would need a USB 2.0
+stick. Aaaaargh!&lt;/p&gt;
+&lt;p&gt;I actually think this has something to do with licensing. Microsoft can't bundle
+vendor USB 3.0 drivers and it doesn't want to (can't?) include the open source
+ones. So here I am, stuck with a nice USB 3.0 pendrive with Windows 8 on it,
+able to boot from it in UEFI mode but not being able to install because once the
+boot process ends the installer doesn't have access to the drive.&lt;/p&gt;
+&lt;p&gt;Seems I'll have to borrow an older pendrive from someone. Oh well.&lt;/p&gt;</summary></entry><entry><title>Finally a new laptop</title><link href="//jepio.github.io/finally-a-new-laptop.html" rel="alternate"></link><updated>2015-05-29T21:23:00+02:00</updated><author><name>Jepio</name></author><id>tag:jepio.github.io,2015-05-29:finally-a-new-laptop.html</id><summary type="html">&lt;p&gt;The time of my old laptop has come, it has finally died on me under mysterious
+circumstances&lt;sup id="fnref:1"&gt;&lt;a class="footnote-ref" href="#fn:1" rel="footnote"&gt;1&lt;/a&gt;&lt;/sup&gt;. It was a Samsung R530, with a T4400 2.2 GHz dual core
+processor. Since I use &lt;a href="https://www.gentoo.org"&gt;gentoo&lt;/a&gt; most of the time I have to compile
+(almost) all of my packages from source, which is very demanding on the
+processor. I did not know unsuitable my old laptop was for this task until
+this weeks.&lt;/p&gt;
+&lt;p&gt;I have now purchased a Thinkpad T440s, with i5-4210U with a 1.7 GHz dual core
+processor. But this time, it comes with turbo boost up to 2.7 GHz - though I
+mostly see about 2.4 GHz on the clock - and hyperthreading. I have known about
+hyperthreading for a while and because I know how it works (time slicing) I
+didn't think it was particularly exciting. I couldn't have been more wrong. It
+turns out that compiling is a sufficiently I/O heavy operation, that it can make
+reasonable usage of the hyperthreading capabilities in the processor and get a
+close to 2x boost compared to the 2 physical cores. Here's a couple of packages
+whose compile times can be compared:&lt;/p&gt;
+&lt;table&gt;
+&lt;thead&gt;
+&lt;tr&gt;
+&lt;th&gt;package&lt;/th&gt;
+&lt;th&gt;time samsung&lt;/th&gt;
+&lt;th&gt;time thinkpad&lt;/th&gt;
+&lt;/tr&gt;
+&lt;/thead&gt;
+&lt;tbody&gt;
+&lt;tr&gt;
+&lt;td&gt;llvm-3.6&lt;/td&gt;
+&lt;td&gt;1 hour&lt;/td&gt;
+&lt;td&gt;37 minutes&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;gcc-4.9.2&lt;/td&gt;
+&lt;td&gt;1 hour 40 min.&lt;/td&gt;
+&lt;td&gt;36 min.&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;boost-1.56&lt;/td&gt;
+&lt;td&gt;57 min.&lt;/td&gt;
+&lt;td&gt;10 min.&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+&lt;p&gt;Now, I must admit that the comparison for boost is probably not fair - in one
+case I built the static as well as the dynamic lib versions, and in the other
+only the dynamic libs. But the speedup is amazing nonetheless.&lt;/p&gt;
+&lt;p&gt;It also seems that the Thinkpad has much better Linux support in general. I
+tested Fedora 22 and everything ACPI related worked out of the box. On Gentoo
+everything works - except for the microphone. The mic mute LED turns on at
+udev device enumeration during init and stays on, I can't get it to work.
+Anyone else experienced this? If so write me because I still haven't found a
+solution.&lt;/p&gt;
+&lt;div class="footnote"&gt;
+&lt;hr /&gt;
+&lt;ol&gt;
+&lt;li id="fn:1"&gt;
+&lt;p&gt;Not really... but let's not get into the details.&amp;#160;&lt;a class="footnote-backref" href="#fnref:1" rev="footnote" title="Jump back to footnote 1 in the text"&gt;&amp;#8617;&lt;/a&gt;&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ol&gt;
+&lt;/div&gt;</summary></entry><entry><title>Embedding a gist in post</title><link href="//jepio.github.io/embedding-a-gist-in-post.html" rel="alternate"></link><updated>2015-03-10T18:29:00+01:00</updated><author><name>Jepio</name></author><id>tag:jepio.github.io,2015-03-10:embedding-a-gist-in-post.html</id><summary type="html">&lt;p&gt;I want to share a python trick with you, that I have found to be very useful.
+And since I want to also find out how to embed gists, I decided to use this post
+as a testing ground.&lt;/p&gt;
+&lt;div class="gist"&gt;
+    &lt;script src='https://gist.github.com/e3ef019ee6e48672d81a.js?file=grouper.py'&gt;&lt;/script&gt;
+    &lt;noscript&gt;
+        &lt;pre&gt;&lt;code&gt;import itertools as it
+
+def grouper(iterable, n, fillvalue=None):
+    iters = (iter(iterable),) * n
+    return it.zip_longest(*iters, fillvalue=fillvalue)&lt;/code&gt;&lt;/pre&gt;
+    &lt;/noscript&gt;
+&lt;/div&gt;
+&lt;p&gt;This is the easiest (only?) way to group items from an iterator.&lt;/p&gt;
+&lt;p&gt;Now if I were to use pygments for this snippet, it would look like this:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="nn"&gt;itertools&lt;/span&gt; &lt;span class="kn"&gt;as&lt;/span&gt; &lt;span class="nn"&gt;it&lt;/span&gt;
+
+&lt;span class="k"&gt;def&lt;/span&gt; &lt;span class="nf"&gt;grouper&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;iterable&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;n&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;fillvalue&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="bp"&gt;None&lt;/span&gt;&lt;span class="p"&gt;):&lt;/span&gt;
+    &lt;span class="n"&gt;iters&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="nb"&gt;iter&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;iterable&lt;/span&gt;&lt;span class="p"&gt;),)&lt;/span&gt; &lt;span class="o"&gt;*&lt;/span&gt; &lt;span class="n"&gt;n&lt;/span&gt;
+    &lt;span class="k"&gt;return&lt;/span&gt; &lt;span class="n"&gt;it&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;izip_longest&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;n&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;fillvalue&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="n"&gt;fillvalue&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="o"&gt;*&lt;/span&gt;&lt;span class="n"&gt;iters&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;Which one looks better?&lt;/p&gt;</summary></entry><entry><title>First code sample</title><link href="//jepio.github.io/first-code-sample.html" rel="alternate"></link><updated>2015-03-10T17:46:00+01:00</updated><author><name>Jepio</name></author><id>tag:jepio.github.io,2015-03-10:first-code-sample.html</id><summary type="html">&lt;p&gt;I'm trying out the syntax highlighting extension to markdown available in
+pelican. Here it goes&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="cp"&gt;#include &amp;lt;vector&amp;gt;&lt;/span&gt;
+
+&lt;span class="kt"&gt;int&lt;/span&gt; &lt;span class="nf"&gt;main&lt;/span&gt;&lt;span class="p"&gt;()&lt;/span&gt;
+&lt;span class="p"&gt;{&lt;/span&gt;
+    &lt;span class="n"&gt;std&lt;/span&gt;&lt;span class="o"&gt;::&lt;/span&gt;&lt;span class="n"&gt;vector&lt;/span&gt; &lt;span class="n"&gt;c&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt; &lt;span class="mi"&gt;1&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="mi"&gt;2&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="mi"&gt;3&lt;/span&gt; &lt;span class="p"&gt;};&lt;/span&gt;
+    &lt;span class="k"&gt;for&lt;/span&gt; &lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="k"&gt;auto&lt;/span&gt;&lt;span class="o"&gt;&amp;amp;&amp;amp;&lt;/span&gt; &lt;span class="nl"&gt;e&lt;/span&gt; &lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="n"&gt;c&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt;
+        &lt;span class="n"&gt;e&lt;/span&gt; &lt;span class="o"&gt;-=&lt;/span&gt; &lt;span class="mi"&gt;1&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+    &lt;span class="p"&gt;}&lt;/span&gt;
+    &lt;span class="k"&gt;return&lt;/span&gt; &lt;span class="n"&gt;c&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="mi"&gt;2&lt;/span&gt;&lt;span class="p"&gt;];&lt;/span&gt;
+&lt;span class="p"&gt;}&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;Now let's see how this looks.&lt;/p&gt;</summary></entry><entry><title>My first post</title><link href="//jepio.github.io/my-first-post.html" rel="alternate"></link><updated>2015-03-10T17:27:00+01:00</updated><author><name>Jepio</name></author><id>tag:jepio.github.io,2015-03-10:my-first-post.html</id><summary type="html">&lt;p&gt;This is my first post on my pelican based website. I tried Jekyll and
+JekyllBootstrap first, but since I know neither ruby nor css, I couldn't
+customize my website at all. But with a python based generator, this shouldn't
+be an issue anymore. So: &lt;em&gt;Hello, World&lt;/em&gt; to you!&lt;/p&gt;</summary></entry></feed>

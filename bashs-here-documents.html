@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+        <meta charset="utf-8" />
+        <title>Bash's here documents</title>
+        <link rel="stylesheet" href="//jepio.github.io/theme/css/my_main.css" />
+        <link href="//jepio.github.io/feeds/all.atom.xml" type="application/atom+xml" rel="alternate" title="Jepio's blog Atom Feed" />
+
+        <!--[if IE]>
+            <script src="https://html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+        <![endif]-->
+</head>
+
+<body id="index" class="home">
+<a href="//www.github.com/jepio/jepio.github.io">
+<img style="position: absolute; top: 0; right: 0; border: 0;" src="https://s3.amazonaws.com/github/ribbons/forkme_right_red_aa0000.png" alt="Fork me on GitHub" />
+</a>
+        <header id="banner" class="body">
+                <h1><a href="//jepio.github.io/">Jepio's blog </a></h1>
+                <nav><ul>
+                    <li><a href="//jepio.github.io/category/misc.html">misc</a></li>
+                    <li class="active"><a href="//jepio.github.io/category/programming.html">programming</a></li>
+                    <li><a href="//jepio.github.io/category/shell.html">shell</a></li>
+                    <li><a href="//jepio.github.io/category/technology.html">technology</a></li>
+                    <li><a href="//jepio.github.io/category/test.html">test</a></li>
+                </ul></nav>
+        </header><!-- /#banner -->
+<section id="content" class="body">
+  <article>
+    <header>
+      <h1 class="entry-title">
+        <a href="//jepio.github.io/bashs-here-documents.html" rel="bookmark"
+           title="Permalink to Bash's here documents">Bash's here documents</a></h1>
+    </header>
+
+    <div class="entry-content">
+<footer class="post-info">
+        <abbr class="published" title="2015-06-03T11:11:00+02:00">
+                Published: Wed 03 June 2015
+        </abbr>
+
+        <address class="vcard author">
+                By                         <a class="url fn" href="//jepio.github.io/author/jepio.html">Jepio</a>
+        </address>
+<p>In <a href="//jepio.github.io/category/programming.html">programming</a>.</p>
+
+</footer><!-- /.post-info -->      <p>I'm just about to finish reading the fantastic essay by Neal Stephanson entitled
+"<em>In the Beginning was the Command Line</em>" and I stumbled upon this quote:</p>
+<blockquote>
+<p>Unix is hard to learn. The process of learning it is one of multiple small
+epiphanies. Typically you are just on the verge of inventing some necessary
+tool or utility when you realize that someone else has already invented it, and
+built it in, and this explains some odd file or directory or command that you
+have noticed but never really understood before.</p>
+</blockquote>
+<p>In the essay it appears not far from a reference to this very old dilbert
+comics:
+<img alt="unix hacker" src="//jepio.github.io/images/unix-hacker.png" /></p>
+<p>Now I thought it's worth mentioning these two things because of what I'm
+about to write about next. My biggest complaint against
+<a href="//www.gnuplot.info">gnuplot</a> has always been that it is missing bash-like
+features - access to utilities for basic data processing, simple looping. This
+makes it hard to work with for anything but the simplest plotting scripts.
+Instead I always reached for python's matplotlib library, which I love to hate,
+whenever I had to perform a more demanding task.</p>
+<p>I was aware of the possibility of somehow calling gnuplot from inside bash, but
+this never appealed to me. It seemed to be a <em>forced</em>, not elegant, solution to
+the problem at hand. But it wasn't until today that it finally dawned on me that
+this is actually <strong>the</strong> right solution and I decided to write about it.</p>
+<p>The bash syntax I am referring to is called <code>Here Documents</code>. Inside a script
+you double redirect (kind of like append) to stdin the word <code>EOF</code>. Everything
+entered after this point will be entered into the application you are calling,
+until it hits the word <code>EOF</code>, the exact same one that you specified. You can use
+bash variables inside the <em>document</em> and everything will be expanded properly.
+It works with everything: python, gnuplot, you name it. I have often felt the
+need to call out from bash to python because python's syntax is so much simpler.
+Now I have a way:</p>
+<div class="highlight"><pre><span class="c">#!/bin/sh</span>
+
+python3 <span class="s">&lt;&lt; EOF</span>
+<span class="s">print(&quot;$*&quot;)</span>
+<span class="s">EOF</span>
+</pre></div>
+
+
+<p>Calling this script is equivalent to doing <code>echo</code>, but probably does not cover
+many corner cases.</p>
+<p>Still, I now feel comfortable with using this feature the next time I need to
+work with gnuplot. And like Neal wrote, it took an epiphany for me to realise
+that gnuplot does not need to have bash built into it to be useful, it is enough
+that it can handle arbitrary textual input from the outside.</p>
+    </div><!-- /.entry-content -->
+
+  </article>
+</section>
+        <section id="extras" class="body">
+                <div class="blogroll">
+                        <h2>blogroll</h2>
+                        <ul>
+                            <li><a href="//getpelican.com/">Pelican</a></li>
+                            <li><a href="//python.org/">Python.org</a></li>
+                            <li><a href="//jinja.pocoo.org/">Jinja2</a></li>
+                        </ul>
+                </div><!-- /.blogroll -->
+                <div class="social">
+                        <h2>social</h2>
+                        <ul>
+                            <li><a href="//jepio.github.io/feeds/all.atom.xml" type="application/atom+xml" rel="alternate">atom feed</a></li>
+
+                            <li><a href="//github.com/jepio">github</a></li>
+                            <li><a href="//twitter.com/jeremip">twitter</a></li>
+                        </ul>
+                </div><!-- /.social -->
+        </section><!-- /#extras -->
+
+        <footer id="contentinfo" class="body">
+                <address id="about" class="vcard body">
+                Proudly powered by <a href="http://getpelican.com/">Pelican</a>, which takes great advantage of <a href="http://python.org">Python</a>.
+                </address><!-- /#about -->
+
+                <p>The theme is by <a href="http://coding.smashingmagazine.com/2009/08/04/designing-a-html-5-layout-from-scratch/">Smashing Magazine</a>, thanks!</p>
+        </footer><!-- /#contentinfo -->
+
+</body>
+</html>

@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom"><title>Jepio's blog</title><link href="//jepio.github.io/" rel="alternate"></link><link href="//jepio.github.io/feeds/shell.atom.xml" rel="self"></link><id>//jepio.github.io/</id><updated>2015-10-09T09:24:00+02:00</updated><entry><title>pushing and popping</title><link href="//jepio.github.io/pushing-and-popping.html" rel="alternate"></link><updated>2015-10-09T09:24:00+02:00</updated><author><name>Jepio</name></author><id>tag:jepio.github.io,2015-10-09:pushing-and-popping.html</id><summary type="html">&lt;p&gt;Today's blog post will be about da pushing and da poppin'. More specifically
+the shell kind.&lt;/p&gt;
+&lt;p&gt;&lt;code&gt;pushd &amp;lt;dir&amp;gt;&lt;/code&gt; is like &lt;code&gt;cd &amp;lt;dir&amp;gt;&lt;/code&gt; except that it puts your previous location on
+the directory stack before changing directory. &lt;/p&gt;
+&lt;p&gt;The directory stack can be inspected with &lt;code&gt;dirs&lt;/code&gt;. The &lt;em&gt;top&lt;/em&gt; is on the left.&lt;/p&gt;
+&lt;p&gt;It is possible to go back to a previous directory (and pop the current one of
+the stack) using &lt;code&gt;popd&lt;/code&gt;.&lt;/p&gt;
+&lt;p&gt;This should be useful!&lt;/p&gt;</summary></entry></feed>

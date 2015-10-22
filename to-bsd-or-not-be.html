@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+        <meta charset="utf-8" />
+        <title>To BSD or not be</title>
+        <link rel="stylesheet" href="//jepio.github.io/theme/css/my_main.css" />
+        <link href="//jepio.github.io/feeds/all.atom.xml" type="application/atom+xml" rel="alternate" title="Jepio's blog Atom Feed" />
+
+        <!--[if IE]>
+            <script src="https://html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+        <![endif]-->
+</head>
+
+<body id="index" class="home">
+<a href="//www.github.com/jepio/jepio.github.io">
+<img style="position: absolute; top: 0; right: 0; border: 0;" src="https://s3.amazonaws.com/github/ribbons/forkme_right_red_aa0000.png" alt="Fork me on GitHub" />
+</a>
+        <header id="banner" class="body">
+                <h1><a href="//jepio.github.io/">Jepio's blog </a></h1>
+                <nav><ul>
+                    <li class="active"><a href="//jepio.github.io/category/misc.html">misc</a></li>
+                    <li><a href="//jepio.github.io/category/programming.html">programming</a></li>
+                    <li><a href="//jepio.github.io/category/shell.html">shell</a></li>
+                    <li><a href="//jepio.github.io/category/technology.html">technology</a></li>
+                    <li><a href="//jepio.github.io/category/test.html">test</a></li>
+                </ul></nav>
+        </header><!-- /#banner -->
+<section id="content" class="body">
+  <article>
+    <header>
+      <h1 class="entry-title">
+        <a href="//jepio.github.io/to-bsd-or-not-be.html" rel="bookmark"
+           title="Permalink to To BSD or not be">To BSD or not be</a></h1>
+    </header>
+
+    <div class="entry-content">
+<footer class="post-info">
+        <abbr class="published" title="2015-08-30T03:30:00+02:00">
+                Published: Sun 30 August 2015
+        </abbr>
+
+        <address class="vcard author">
+                By                         <a class="url fn" href="//jepio.github.io/author/jepio.html">Jepio</a>
+        </address>
+<p>In <a href="//jepio.github.io/category/misc.html">misc</a>.</p>
+
+</footer><!-- /.post-info -->      <p>I became interested in BSD's this week. The thought of installing one on my
+hardware had been crawling around my head ever since someone told me their
+"plan for the weekend is to install an original Unix while my girlfriend is
+away".</p>
+<p>So I dived in and tried what I believe to be the 3 most popular and root
+distributions: NetBSD, FreeBSD, OpenBSD. I cared about 3 things: support for
+EFI booting, GPT, and WiFi.</p>
+<p>First I had to dig through lots of (what I consider to be) legacy information
+about slices, wedges and (BSD) disklabels.</p>
+<p>FreeBSD has an EFI boot loader, supports GPT but the iwm module panic the
+kernel about 80% of the time.</p>
+<p>NetBSD supports GPT, doesn't have an EFI bootloader and WiFi works 90% of the
+time. Only sometimes does it decide to show me the middle finger.</p>
+<p>OpenBSD doesn't support GPT, nor EFI, and I can't test the WiFi because the
+firmware needs to be downloaded after the install. Talk of planning right
+there... Someone is working on EFI and GPT upstream which works in a virtual
+machine, but I'm having problems installing it onto a real hard drive.</p>
+<p>Update:
+So FreeBSD is still unusable due to the WiFi-related panics. NetBSD seems to
+have decided that after initially working quite correctly with respect to the
+WiFi, the wpa-supplicant is incorrect for it. So now on boot it stalls at the
+WiFi configuration until I cancel. Since I don't have time to figure these
+things out right now, I'll leave it for a better time.</p>
+<p>OpenBSD appears to work quite well if you ignore the not-obvious mechanics of
+mixing <strong>experimental</strong> GPT support with classic BSD disklabels. I made 1
+OpenBSD partition and within that 4 labels: /, swap, /usr, /var. But when using
+<code>disklabel</code> it also showed me <em>some</em> of the other partitions that I had on that
+hard drive. Some, because I have 16 GPT partitions + the 4 OpenBSD ones and only
+16 total are supported by disklabel.</p>
+<p>When it comes to booting I can boot FreeBSD using only their bootloader, fully in
+EFI mode. NetBSD can be booted as a kernel from EFI grub. The only one that
+can't be booted in EFI mode is OpenBSD. Although that is being worked on.</p>
+<p>On the bright side, all of the things I was testing are part of *BSD-CURRENT.
+This goes especially for the iwm module used by my Intel 7260 chip. It was first
+introduced to OpenBSD, then NetBSD copied it and finally it made it's way into
+FreeBSD. So hopefully once the rough edges are ironed out things will be up to
+this years par some time next year (or in November in the case of OpenBSD). I'll
+definitely keep tracking the progress, but for now I'll experiment with FreeBSD
+in a VM.</p>
+    </div><!-- /.entry-content -->
+
+  </article>
+</section>
+        <section id="extras" class="body">
+                <div class="blogroll">
+                        <h2>blogroll</h2>
+                        <ul>
+                            <li><a href="//getpelican.com/">Pelican</a></li>
+                            <li><a href="//python.org/">Python.org</a></li>
+                            <li><a href="//jinja.pocoo.org/">Jinja2</a></li>
+                        </ul>
+                </div><!-- /.blogroll -->
+                <div class="social">
+                        <h2>social</h2>
+                        <ul>
+                            <li><a href="//jepio.github.io/feeds/all.atom.xml" type="application/atom+xml" rel="alternate">atom feed</a></li>
+
+                            <li><a href="//github.com/jepio">github</a></li>
+                            <li><a href="//twitter.com/jeremip">twitter</a></li>
+                        </ul>
+                </div><!-- /.social -->
+        </section><!-- /#extras -->
+
+        <footer id="contentinfo" class="body">
+                <address id="about" class="vcard body">
+                Proudly powered by <a href="http://getpelican.com/">Pelican</a>, which takes great advantage of <a href="http://python.org">Python</a>.
+                </address><!-- /#about -->
+
+                <p>The theme is by <a href="http://coding.smashingmagazine.com/2009/08/04/designing-a-html-5-layout-from-scratch/">Smashing Magazine</a>, thanks!</p>
+        </footer><!-- /#contentinfo -->
+
+</body>
+</html>

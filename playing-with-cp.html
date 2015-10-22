@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+        <meta charset="utf-8" />
+        <title>playing with cp</title>
+        <link rel="stylesheet" href="//jepio.github.io/theme/css/my_main.css" />
+        <link href="//jepio.github.io/feeds/all.atom.xml" type="application/atom+xml" rel="alternate" title="Jepio's blog Atom Feed" />
+
+        <!--[if IE]>
+            <script src="https://html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+        <![endif]-->
+</head>
+
+<body id="index" class="home">
+<a href="//www.github.com/jepio/jepio.github.io">
+<img style="position: absolute; top: 0; right: 0; border: 0;" src="https://s3.amazonaws.com/github/ribbons/forkme_right_red_aa0000.png" alt="Fork me on GitHub" />
+</a>
+        <header id="banner" class="body">
+                <h1><a href="//jepio.github.io/">Jepio's blog </a></h1>
+                <nav><ul>
+                    <li class="active"><a href="//jepio.github.io/category/misc.html">misc</a></li>
+                    <li><a href="//jepio.github.io/category/programming.html">programming</a></li>
+                    <li><a href="//jepio.github.io/category/shell.html">shell</a></li>
+                    <li><a href="//jepio.github.io/category/technology.html">technology</a></li>
+                    <li><a href="//jepio.github.io/category/test.html">test</a></li>
+                </ul></nav>
+        </header><!-- /#banner -->
+<section id="content" class="body">
+  <article>
+    <header>
+      <h1 class="entry-title">
+        <a href="//jepio.github.io/playing-with-cp.html" rel="bookmark"
+           title="Permalink to playing with cp">playing with cp</a></h1>
+    </header>
+
+    <div class="entry-content">
+<footer class="post-info">
+        <abbr class="published" title="2015-10-19T12:15:00+02:00">
+                Published: Mon 19 October 2015
+        </abbr>
+
+        <address class="vcard author">
+                By                         <a class="url fn" href="//jepio.github.io/author/jepio.html">Jepio</a>
+        </address>
+<p>In <a href="//jepio.github.io/category/misc.html">misc</a>.</p>
+
+</footer><!-- /.post-info -->      <p>BTRFS breathes new air into the old <code>cp</code> command. Suddenly it can be used to
+create instantaneous copy-on-write (CoW) snapshots of single files via <code>cp
+--reflink</code>.</p>
+<p>When you want to convert a folder to a subvolume, you are best of with the
+following commands:</p>
+<div class="highlight"><pre># mv folder folder_old
+# btrfs su create ./folder
+# cp -a --reflink ./folder_old/. folder
+</pre></div>
+
+
+<p>If you want to disable data CoW (as with <code>nodatacow</code> mount option [but which
+isn't that useful because it applies to the whole btrfs volume]) on single
+files you need apply the xattr +C to it, and defrag, or simply <code>cp</code> it (if it's
+a folder best to use <code>cp -a folder/. dest</code>).</p>
+<div class="highlight"><pre><span class="nv">$ </span>chattr +C file
+<span class="nv">$ </span>btrfs <span class="k">fi</span> defrag file <span class="c"># or</span>
+<span class="nv">$ </span>cp --reflink<span class="o">=</span>never file file.new <span class="o">&amp;&amp;</span> mv file.new file
+</pre></div>
+
+
+<p>And there you have it: cp is suddenly much more useful.</p>
+    </div><!-- /.entry-content -->
+
+  </article>
+</section>
+        <section id="extras" class="body">
+                <div class="blogroll">
+                        <h2>blogroll</h2>
+                        <ul>
+                            <li><a href="//getpelican.com/">Pelican</a></li>
+                            <li><a href="//python.org/">Python.org</a></li>
+                            <li><a href="//jinja.pocoo.org/">Jinja2</a></li>
+                        </ul>
+                </div><!-- /.blogroll -->
+                <div class="social">
+                        <h2>social</h2>
+                        <ul>
+                            <li><a href="//jepio.github.io/feeds/all.atom.xml" type="application/atom+xml" rel="alternate">atom feed</a></li>
+
+                            <li><a href="//github.com/jepio">github</a></li>
+                            <li><a href="//twitter.com/jeremip">twitter</a></li>
+                        </ul>
+                </div><!-- /.social -->
+        </section><!-- /#extras -->
+
+        <footer id="contentinfo" class="body">
+                <address id="about" class="vcard body">
+                Proudly powered by <a href="http://getpelican.com/">Pelican</a>, which takes great advantage of <a href="http://python.org">Python</a>.
+                </address><!-- /#about -->
+
+                <p>The theme is by <a href="http://coding.smashingmagazine.com/2009/08/04/designing-a-html-5-layout-from-scratch/">Smashing Magazine</a>, thanks!</p>
+        </footer><!-- /#contentinfo -->
+
+</body>
+</html>

@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom"><title>Jepio's blog</title><link href="//jepio.github.io/" rel="alternate"></link><link href="//jepio.github.io/feeds/test.atom.xml" rel="self"></link><id>//jepio.github.io/</id><updated>2015-03-10T18:29:00+01:00</updated><entry><title>Embedding a gist in post</title><link href="//jepio.github.io/embedding-a-gist-in-post.html" rel="alternate"></link><updated>2015-03-10T18:29:00+01:00</updated><author><name>Jepio</name></author><id>tag:jepio.github.io,2015-03-10:embedding-a-gist-in-post.html</id><summary type="html">&lt;p&gt;I want to share a python trick with you, that I have found to be very useful.
+And since I want to also find out how to embed gists, I decided to use this post
+as a testing ground.&lt;/p&gt;
+&lt;div class="gist"&gt;
+    &lt;script src='https://gist.github.com/e3ef019ee6e48672d81a.js?file=grouper.py'&gt;&lt;/script&gt;
+    &lt;noscript&gt;
+        &lt;pre&gt;&lt;code&gt;import itertools as it
+
+def grouper(iterable, n, fillvalue=None):
+    iters = (iter(iterable),) * n
+    return it.zip_longest(*iters, fillvalue=fillvalue)&lt;/code&gt;&lt;/pre&gt;
+    &lt;/noscript&gt;
+&lt;/div&gt;
+&lt;p&gt;This is the easiest (only?) way to group items from an iterator.&lt;/p&gt;
+&lt;p&gt;Now if I were to use pygments for this snippet, it would look like this:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="nn"&gt;itertools&lt;/span&gt; &lt;span class="kn"&gt;as&lt;/span&gt; &lt;span class="nn"&gt;it&lt;/span&gt;
+
+&lt;span class="k"&gt;def&lt;/span&gt; &lt;span class="nf"&gt;grouper&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;iterable&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;n&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;fillvalue&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="bp"&gt;None&lt;/span&gt;&lt;span class="p"&gt;):&lt;/span&gt;
+    &lt;span class="n"&gt;iters&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="nb"&gt;iter&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;iterable&lt;/span&gt;&lt;span class="p"&gt;),)&lt;/span&gt; &lt;span class="o"&gt;*&lt;/span&gt; &lt;span class="n"&gt;n&lt;/span&gt;
+    &lt;span class="k"&gt;return&lt;/span&gt; &lt;span class="n"&gt;it&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;izip_longest&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;n&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;fillvalue&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="n"&gt;fillvalue&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="o"&gt;*&lt;/span&gt;&lt;span class="n"&gt;iters&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;Which one looks better?&lt;/p&gt;</summary></entry><entry><title>My first post</title><link href="//jepio.github.io/my-first-post.html" rel="alternate"></link><updated>2015-03-10T17:27:00+01:00</updated><author><name>Jepio</name></author><id>tag:jepio.github.io,2015-03-10:my-first-post.html</id><summary type="html">&lt;p&gt;This is my first post on my pelican based website. I tried Jekyll and
+JekyllBootstrap first, but since I know neither ruby nor css, I couldn't
+customize my website at all. But with a python based generator, this shouldn't
+be an issue anymore. So: &lt;em&gt;Hello, World&lt;/em&gt; to you!&lt;/p&gt;</summary></entry></feed>

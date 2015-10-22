@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+        <meta charset="utf-8" />
+        <title>Where the hell is the vectorization report?</title>
+        <link rel="stylesheet" href="//jepio.github.io/theme/css/my_main.css" />
+        <link href="//jepio.github.io/feeds/all.atom.xml" type="application/atom+xml" rel="alternate" title="Jepio's blog Atom Feed" />
+
+        <!--[if IE]>
+            <script src="https://html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+        <![endif]-->
+</head>
+
+<body id="index" class="home">
+<a href="//www.github.com/jepio/jepio.github.io">
+<img style="position: absolute; top: 0; right: 0; border: 0;" src="https://s3.amazonaws.com/github/ribbons/forkme_right_red_aa0000.png" alt="Fork me on GitHub" />
+</a>
+        <header id="banner" class="body">
+                <h1><a href="//jepio.github.io/">Jepio's blog </a></h1>
+                <nav><ul>
+                    <li><a href="//jepio.github.io/category/misc.html">misc</a></li>
+                    <li class="active"><a href="//jepio.github.io/category/programming.html">programming</a></li>
+                    <li><a href="//jepio.github.io/category/shell.html">shell</a></li>
+                    <li><a href="//jepio.github.io/category/technology.html">technology</a></li>
+                    <li><a href="//jepio.github.io/category/test.html">test</a></li>
+                </ul></nav>
+        </header><!-- /#banner -->
+<section id="content" class="body">
+  <article>
+    <header>
+      <h1 class="entry-title">
+        <a href="//jepio.github.io/where-the-hell-is-the-vectorization-report.html" rel="bookmark"
+           title="Permalink to Where the hell is the vectorization report?">Where the hell is the vectorization report?</a></h1>
+    </header>
+
+    <div class="entry-content">
+<footer class="post-info">
+        <abbr class="published" title="2015-06-13T14:22:00+02:00">
+                Published: Sat 13 June 2015
+        </abbr>
+
+        <address class="vcard author">
+                By                         <a class="url fn" href="//jepio.github.io/author/jepio.html">Jepio</a>
+        </address>
+<p>In <a href="//jepio.github.io/category/programming.html">programming</a>.</p>
+
+</footer><!-- /.post-info -->      <p>Everyone should care about vectorization. It's relatively easy for the compiler
+to do on it's own compared to stuff like auto-parallelisation, and can yield
+high performance gains on certain parts of the code. The win can be anything
+from 2x to 8x, depending on what data type we're using and what kinds of
+instructions our processor supports. The only condition is that we have to write
+easy code that shows the compiler everything it needs to know to determine
+whether it's safe to vectorize.</p>
+<p>Most of the time we talk about vectorization of loops. It so happens that in
+both clang and gcc the vectorizer is turned on automatically at <code>-O3</code>
+optimization flags <sup id="fnref:1"><a class="footnote-ref" href="#fn:1" rel="footnote">1</a></sup>. What we're interested in is knowing how well it does.
+And I don't mean benchmarking or profiling - we need to know if it has done its
+job.  That's what vectorization reports are there for. Clang has a fairly large
+set of flags to inform you of what went on behind your back:</p>
+<div class="highlight"><pre>-Rpass=loop-vectorize
+-Rpass-missed=loop-vectorize
+-Rpass-analysis=loop-vectorize
+</pre></div>
+
+
+<p>I pretty much use all of them at the same time, everytime. You turn on the first
+one and you see nothing, so you turn on the second one and it tells you that
+this and that loop failed to be vectorized. Finally you have to turn on that
+last one to find out why. There really ought to be a flag that turns all of them
+on - something like <code>-fvectorize-report</code>.</p>
+<p>But that's nothing compared to the trouble that gcc caused me. Like a good
+citizen I open up my browser and search for <em>gcc autovectorization</em>. With
+joy I remark that the first link leads to the GNU project website dealing with
+<a href="https://gcc.gnu.org/projects/tree-ssa/vectorization.html">Auto-vectorization in GCC</a>. But when I get there, it tells me to use
+<code>-ftree-vectorizer-verbose=N</code> to turn on a verbose vectorization report. Seems
+reasonable, I think to myself, and start experimenting with it. But it doesn't
+work in GCC 4.9.2. I get no report of anything, neither failures nor successes.
+And on top of that, no warning/error message telling me that the flag doesn't
+work. Luckily the internet has other websites and the LHCb twiki website tells
+me that this flag is depracated in GCC 4.9. Someone should notify GNU of
+that<sup id="fnref:2"><a class="footnote-ref" href="#fn:2" rel="footnote">2</a></sup>! The new flags are:</p>
+<div class="highlight"><pre>-fopt-info-vec
+-fopt-info-vec-missed
+</pre></div>
+
+
+<p>You learn something new every day.</p>
+<div class="footnote">
+<hr />
+<ol>
+<li id="fn:1">
+<p>Clang might have vectorization enabled by default, I haven't really looked
+into it.&#160;<a class="footnote-backref" href="#fnref:1" rev="footnote" title="Jump back to footnote 1 in the text">&#8617;</a></p>
+</li>
+<li id="fn:2">
+<p>Don't worry, I plan on doing that myself and this post will help remind me
+of that.&#160;<a class="footnote-backref" href="#fnref:2" rev="footnote" title="Jump back to footnote 2 in the text">&#8617;</a></p>
+</li>
+</ol>
+</div>
+    </div><!-- /.entry-content -->
+
+  </article>
+</section>
+        <section id="extras" class="body">
+                <div class="blogroll">
+                        <h2>blogroll</h2>
+                        <ul>
+                            <li><a href="//getpelican.com/">Pelican</a></li>
+                            <li><a href="//python.org/">Python.org</a></li>
+                            <li><a href="//jinja.pocoo.org/">Jinja2</a></li>
+                        </ul>
+                </div><!-- /.blogroll -->
+                <div class="social">
+                        <h2>social</h2>
+                        <ul>
+                            <li><a href="//jepio.github.io/feeds/all.atom.xml" type="application/atom+xml" rel="alternate">atom feed</a></li>
+
+                            <li><a href="//github.com/jepio">github</a></li>
+                            <li><a href="//twitter.com/jeremip">twitter</a></li>
+                        </ul>
+                </div><!-- /.social -->
+        </section><!-- /#extras -->
+
+        <footer id="contentinfo" class="body">
+                <address id="about" class="vcard body">
+                Proudly powered by <a href="http://getpelican.com/">Pelican</a>, which takes great advantage of <a href="http://python.org">Python</a>.
+                </address><!-- /#about -->
+
+                <p>The theme is by <a href="http://coding.smashingmagazine.com/2009/08/04/designing-a-html-5-layout-from-scratch/">Smashing Magazine</a>, thanks!</p>
+        </footer><!-- /#contentinfo -->
+
+</body>
+</html>

@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+        <meta charset="utf-8" />
+        <title>push %rbp; mov %rsp,%rbp</title>
+        <link rel="stylesheet" href="//jepio.github.io/theme/css/my_main.css" />
+        <link href="//jepio.github.io/feeds/all.atom.xml" type="application/atom+xml" rel="alternate" title="Jepio's blog Atom Feed" />
+
+        <!--[if IE]>
+            <script src="https://html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+        <![endif]-->
+</head>
+
+<body id="index" class="home">
+<a href="//www.github.com/jepio/jepio.github.io">
+<img style="position: absolute; top: 0; right: 0; border: 0;" src="https://s3.amazonaws.com/github/ribbons/forkme_right_red_aa0000.png" alt="Fork me on GitHub" />
+</a>
+        <header id="banner" class="body">
+                <h1><a href="//jepio.github.io/">Jepio's blog </a></h1>
+                <nav><ul>
+                    <li><a href="//jepio.github.io/category/misc.html">misc</a></li>
+                    <li class="active"><a href="//jepio.github.io/category/programming.html">programming</a></li>
+                    <li><a href="//jepio.github.io/category/shell.html">shell</a></li>
+                    <li><a href="//jepio.github.io/category/technology.html">technology</a></li>
+                    <li><a href="//jepio.github.io/category/test.html">test</a></li>
+                </ul></nav>
+        </header><!-- /#banner -->
+<section id="content" class="body">
+  <article>
+    <header>
+      <h1 class="entry-title">
+        <a href="//jepio.github.io/push-rbp-mov-rsprbp.html" rel="bookmark"
+           title="Permalink to push %rbp; mov %rsp,%rbp">push %rbp; mov %rsp,%rbp</a></h1>
+    </header>
+
+    <div class="entry-content">
+<footer class="post-info">
+        <abbr class="published" title="2015-09-22T08:57:00+02:00">
+                Published: Tue 22 September 2015
+        </abbr>
+
+        <address class="vcard author">
+                By                         <a class="url fn" href="//jepio.github.io/author/jepio.html">Jepio</a>
+        </address>
+<p>In <a href="//jepio.github.io/category/programming.html">programming</a>.</p>
+
+</footer><!-- /.post-info -->      <p>There. Do I have your attention? With this post my intention is to finally
+figure out what this pair of instructions actually mean. I mean, they show up
+everywhere. To do this I'd like to deal with a simple C example.</p>
+<div class="highlight"><pre><span class="kt">int</span> <span class="nf">main</span><span class="p">(</span><span class="kt">void</span><span class="p">)</span>
+<span class="p">{</span>
+    <span class="k">for</span> <span class="p">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="mi">5</span><span class="p">;</span> <span class="o">++</span><span class="n">i</span><span class="p">);</span>
+<span class="p">}</span>
+</pre></div>
+
+
+<p>First let's compile it</p>
+<div class="highlight"><pre>gcc -g -O0 test.c -c
+</pre></div>
+
+
+<p>and then let's disassemble</p>
+<div class="highlight"><pre>objdump -S test.o
+</pre></div>
+
+
+<p>The output is the assembly interleaved with the source code.</p>
+<div class="highlight"><pre>test.o:     file format elf64-x86-64
+
+Disassembly of section .text:
+
+0000000000000000 &lt;main&gt;:
+int main(void)
+{
+   0:   55                      push   %rbp
+   1:   48 89 e5                mov    %rsp,%rbp
+    for (int i = 0; i &lt; 5; ++i);
+   4:   c7 45 fc 00 00 00 00    movl   $0x0,-0x4(%rbp)
+   b:   eb 04                   jmp    11 &lt;main+0x11&gt;
+   d:   83 45 fc 01             addl   $0x1,-0x4(%rbp)
+  11:   83 7d fc 04             cmpl   $0x4,-0x4(%rbp)
+  15:   7e f6                   jle    d &lt;main+0xd&gt;
+  17:   b8 00 00 00 00          mov    $0x0,%eax
+}
+  1c:   5d                      pop    %rbp
+  1d:   c3                      retq
+</pre></div>
+
+
+<p>An interesting thing to note, and what made me write this post was the idea:</p>
+<blockquote>
+<p>a loop is 5 instructions</p>
+</blockquote>
+<p>and indeed it is:</p>
+<ol>
+<li>assignment</li>
+<li>unconditional jump to comparison</li>
+<li>increment</li>
+<li>comparison</li>
+<li>conditional jump out of loop</li>
+</ol>
+<p>When I was figuring this out in my head it looked slightly different:</p>
+<ol>
+<li>assignment</li>
+<li>comparison</li>
+<li>conditional jump out of loop</li>
+<li>increment</li>
+<li>unconditional jump to comparison</li>
+</ol>
+<p>but reordering does not change the logic.</p>
+    </div><!-- /.entry-content -->
+
+  </article>
+</section>
+        <section id="extras" class="body">
+                <div class="blogroll">
+                        <h2>blogroll</h2>
+                        <ul>
+                            <li><a href="//getpelican.com/">Pelican</a></li>
+                            <li><a href="//python.org/">Python.org</a></li>
+                            <li><a href="//jinja.pocoo.org/">Jinja2</a></li>
+                        </ul>
+                </div><!-- /.blogroll -->
+                <div class="social">
+                        <h2>social</h2>
+                        <ul>
+                            <li><a href="//jepio.github.io/feeds/all.atom.xml" type="application/atom+xml" rel="alternate">atom feed</a></li>
+
+                            <li><a href="//github.com/jepio">github</a></li>
+                            <li><a href="//twitter.com/jeremip">twitter</a></li>
+                        </ul>
+                </div><!-- /.social -->
+        </section><!-- /#extras -->
+
+        <footer id="contentinfo" class="body">
+                <address id="about" class="vcard body">
+                Proudly powered by <a href="http://getpelican.com/">Pelican</a>, which takes great advantage of <a href="http://python.org">Python</a>.
+                </address><!-- /#about -->
+
+                <p>The theme is by <a href="http://coding.smashingmagazine.com/2009/08/04/designing-a-html-5-layout-from-scratch/">Smashing Magazine</a>, thanks!</p>
+        </footer><!-- /#contentinfo -->
+
+</body>
+</html>

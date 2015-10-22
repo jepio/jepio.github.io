@@ -1,0 +1,259 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom"><title>Jepio's blog</title><link href="//jepio.github.io/" rel="alternate"></link><link href="//jepio.github.io/feeds/programming.atom.xml" rel="self"></link><id>//jepio.github.io/</id><updated>2015-10-21T20:15:00+02:00</updated><entry><title>printing symbol table</title><link href="//jepio.github.io/printing-symbol-table.html" rel="alternate"></link><updated>2015-10-21T20:15:00+02:00</updated><author><name>Jepio</name></author><id>tag:jepio.github.io,2015-10-21:printing-symbol-table.html</id><summary type="html"></summary></entry><entry><title>Threads are processes</title><link href="//jepio.github.io/threads-are-processes.html" rel="alternate"></link><updated>2015-09-22T13:12:00+02:00</updated><author><name>Jepio</name></author><id>tag:jepio.github.io,2015-09-22:threads-are-processes.html</id><summary type="html">&lt;p&gt;The standard thread implementation on linux is &lt;code&gt;pthreads&lt;/code&gt; and processes can
+easily be created by issuing a &lt;code&gt;fork&lt;/code&gt; function call. While I was studying
+processes recently and reading the man pages for &lt;code&gt;clone&lt;/code&gt; I found two important
+pieces of information:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;threads are commonly implemented using &lt;code&gt;clone&lt;/code&gt;.&lt;/li&gt;
+&lt;li&gt;the fork function calls the &lt;code&gt;clone&lt;/code&gt; syscall.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;The conclusion from these is that on linux &lt;strong&gt;threads == processes&lt;/strong&gt;. So threads
+are in reality &lt;em&gt;processes&lt;/em&gt; with a shared address space and processes are really
+&lt;em&gt;processes&lt;/em&gt; with COW&lt;sup id="fnref:1"&gt;&lt;a class="footnote-ref" href="#fn:1" rel="footnote"&gt;1&lt;/a&gt;&lt;/sup&gt; pages. You can find confirmation in many answers on
+stackoverflow &lt;a href="http://stackoverflow.com/questions/807506/threads-vs-processes-in-linux"&gt;such as this one&lt;/a&gt;.&lt;/p&gt;
+&lt;p&gt;To me this is amazing, and kudos to the kernel devs for deciding that the two
+can be implemented in the same way and for optimizing this one path to where
+we are now.&lt;/p&gt;
+&lt;div class="footnote"&gt;
+&lt;hr /&gt;
+&lt;ol&gt;
+&lt;li id="fn:1"&gt;
+&lt;p&gt;&lt;strong&gt;C&lt;/strong&gt;opy &lt;strong&gt;O&lt;/strong&gt;n &lt;strong&gt;W&lt;/strong&gt;rite which makes spawning cheap to do.&amp;#160;&lt;a class="footnote-backref" href="#fnref:1" rev="footnote" title="Jump back to footnote 1 in the text"&gt;&amp;#8617;&lt;/a&gt;&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ol&gt;
+&lt;/div&gt;</summary></entry><entry><title>push %rbp; mov %rsp,%rbp</title><link href="//jepio.github.io/push-rbp-mov-rsprbp.html" rel="alternate"></link><updated>2015-09-22T08:57:00+02:00</updated><author><name>Jepio</name></author><id>tag:jepio.github.io,2015-09-22:push-rbp-mov-rsprbp.html</id><summary type="html">&lt;p&gt;There. Do I have your attention? With this post my intention is to finally
+figure out what this pair of instructions actually mean. I mean, they show up
+everywhere. To do this I'd like to deal with a simple C example.&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="kt"&gt;int&lt;/span&gt; &lt;span class="nf"&gt;main&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="kt"&gt;void&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;span class="p"&gt;{&lt;/span&gt;
+    &lt;span class="k"&gt;for&lt;/span&gt; &lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="kt"&gt;int&lt;/span&gt; &lt;span class="n"&gt;i&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="mi"&gt;0&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt; &lt;span class="n"&gt;i&lt;/span&gt; &lt;span class="o"&gt;&amp;lt;&lt;/span&gt; &lt;span class="mi"&gt;5&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt; &lt;span class="o"&gt;++&lt;/span&gt;&lt;span class="n"&gt;i&lt;/span&gt;&lt;span class="p"&gt;);&lt;/span&gt;
+&lt;span class="p"&gt;}&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;First let's compile it&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;gcc -g -O0 test.c -c
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;and then let's disassemble&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;objdump -S test.o
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;The output is the assembly interleaved with the source code.&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;test.o:     file format elf64-x86-64
+
+Disassembly of section .text:
+
+0000000000000000 &amp;lt;main&amp;gt;:
+int main(void)
+{
+   0:   55                      push   %rbp
+   1:   48 89 e5                mov    %rsp,%rbp
+    for (int i = 0; i &amp;lt; 5; ++i);
+   4:   c7 45 fc 00 00 00 00    movl   $0x0,-0x4(%rbp)
+   b:   eb 04                   jmp    11 &amp;lt;main+0x11&amp;gt;
+   d:   83 45 fc 01             addl   $0x1,-0x4(%rbp)
+  11:   83 7d fc 04             cmpl   $0x4,-0x4(%rbp)
+  15:   7e f6                   jle    d &amp;lt;main+0xd&amp;gt;
+  17:   b8 00 00 00 00          mov    $0x0,%eax
+}
+  1c:   5d                      pop    %rbp
+  1d:   c3                      retq
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;An interesting thing to note, and what made me write this post was the idea:&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;a loop is 5 instructions&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;and indeed it is:&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;assignment&lt;/li&gt;
+&lt;li&gt;unconditional jump to comparison&lt;/li&gt;
+&lt;li&gt;increment&lt;/li&gt;
+&lt;li&gt;comparison&lt;/li&gt;
+&lt;li&gt;conditional jump out of loop&lt;/li&gt;
+&lt;/ol&gt;
+&lt;p&gt;When I was figuring this out in my head it looked slightly different:&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;assignment&lt;/li&gt;
+&lt;li&gt;comparison&lt;/li&gt;
+&lt;li&gt;conditional jump out of loop&lt;/li&gt;
+&lt;li&gt;increment&lt;/li&gt;
+&lt;li&gt;unconditional jump to comparison&lt;/li&gt;
+&lt;/ol&gt;
+&lt;p&gt;but reordering does not change the logic.&lt;/p&gt;</summary></entry><entry><title>Dynamic linking and the RUNPATH</title><link href="//jepio.github.io/dynamic-linking-and-the-runpath.html" rel="alternate"></link><updated>2015-09-21T13:18:00+02:00</updated><author><name>Jepio</name></author><id>tag:jepio.github.io,2015-09-21:dynamic-linking-and-the-runpath.html</id><summary type="html">&lt;p&gt;If you want to have binaries and libraries portable across linux systems, or
+even portable across locations on your filesystem, you need to know a bit about
+dynamic linking.&lt;/p&gt;
+&lt;p&gt;First read &lt;code&gt;man ld.so&lt;/code&gt;, this will tell you about where libraries are looked up
+when they are being searched for during application startup. This should also
+tell you something about why using RPATH is a bad idea (it's because it
+overrides all else with a fixed location - useless).&lt;/p&gt;
+&lt;p&gt;Next you will want to see what is currently in the RUNPATH of an elf &lt;em&gt;thing&lt;/em&gt; (I
+might call this RPATH in future, with the understanding that I mean alias
+RPATH=RUNPATH). There are atleast two ways of achieving this with standard
+tools. They are&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;objdump -p &amp;lt;binary&amp;gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;and&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;readelf -d &amp;lt;binary&amp;gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;It's usually a good idea to pipe the output through&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;egrep &amp;#39;R(UN)?PATH&amp;#39;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;which catches the &lt;em&gt;legacy&lt;/em&gt; case of RPATH usage as well.&lt;/p&gt;
+&lt;p&gt;Finally, you are likely to want to modify it (I know I frequently am). Again,
+there are two tools that can do the job: &lt;code&gt;chrpath&lt;/code&gt; and &lt;code&gt;patchelf&lt;/code&gt;. They are
+very similar and can also quickly print the content of RUNPATH. Below are their
+usage strings.
+chrpath:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="n"&gt;Usage&lt;/span&gt;&lt;span class="o"&gt;:&lt;/span&gt; &lt;span class="n"&gt;chrpath&lt;/span&gt; &lt;span class="o"&gt;[-&lt;/span&gt;&lt;span class="n"&gt;v&lt;/span&gt;&lt;span class="o"&gt;|-&lt;/span&gt;&lt;span class="n"&gt;d&lt;/span&gt;&lt;span class="o"&gt;|-&lt;/span&gt;&lt;span class="n"&gt;c&lt;/span&gt;&lt;span class="o"&gt;|-&lt;/span&gt;&lt;span class="n"&gt;r&lt;/span&gt; &lt;span class="o"&gt;&amp;lt;&lt;/span&gt;&lt;span class="n"&gt;path&lt;/span&gt;&lt;span class="o"&gt;&amp;gt;]&lt;/span&gt; &lt;span class="o"&gt;&amp;lt;&lt;/span&gt;&lt;span class="n"&gt;program&lt;/span&gt;&lt;span class="o"&gt;&amp;gt;&lt;/span&gt; &lt;span class="o"&gt;[&amp;lt;&lt;/span&gt;&lt;span class="n"&gt;program&lt;/span&gt;&lt;span class="o"&gt;&amp;gt;&lt;/span&gt; &lt;span class="o"&gt;...]&lt;/span&gt;
+
+   &lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="n"&gt;v&lt;/span&gt;&lt;span class="o"&gt;|--&lt;/span&gt;&lt;span class="n"&gt;version&lt;/span&gt;                &lt;span class="n"&gt;Display&lt;/span&gt; &lt;span class="n"&gt;program&lt;/span&gt; &lt;span class="n"&gt;version&lt;/span&gt; &lt;span class="n"&gt;number&lt;/span&gt;
+   &lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="n"&gt;d&lt;/span&gt;&lt;span class="o"&gt;|--&lt;/span&gt;&lt;span class="n"&gt;delete&lt;/span&gt;                 &lt;span class="n"&gt;Delete&lt;/span&gt; &lt;span class="n"&gt;current&lt;/span&gt; &lt;span class="n"&gt;rpath&lt;/span&gt;&lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="n"&gt;runpath&lt;/span&gt; &lt;span class="n"&gt;setting&lt;/span&gt;
+   &lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="n"&gt;c&lt;/span&gt;&lt;span class="o"&gt;|--&lt;/span&gt;&lt;span class="n"&gt;convert&lt;/span&gt;                &lt;span class="n"&gt;Convert&lt;/span&gt; &lt;span class="n"&gt;rpath&lt;/span&gt; &lt;span class="n"&gt;to&lt;/span&gt; &lt;span class="n"&gt;runpath&lt;/span&gt;
+   &lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="n"&gt;r&lt;/span&gt; &lt;span class="o"&gt;&amp;lt;&lt;/span&gt;&lt;span class="n"&gt;path&lt;/span&gt;&lt;span class="o"&gt;&amp;gt;|--&lt;/span&gt;&lt;span class="n"&gt;replace&lt;/span&gt; &lt;span class="o"&gt;&amp;lt;&lt;/span&gt;&lt;span class="n"&gt;path&lt;/span&gt;&lt;span class="o"&gt;&amp;gt;&lt;/span&gt;  &lt;span class="n"&gt;Replace&lt;/span&gt; &lt;span class="n"&gt;current&lt;/span&gt; &lt;span class="n"&gt;rpath&lt;/span&gt;&lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="n"&gt;runpath&lt;/span&gt; &lt;span class="n"&gt;setting&lt;/span&gt;
+                               &lt;span class="k"&gt;with&lt;/span&gt; &lt;span class="n"&gt;the&lt;/span&gt; &lt;span class="n"&gt;path&lt;/span&gt; &lt;span class="n"&gt;given&lt;/span&gt;
+   &lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="n"&gt;l&lt;/span&gt;&lt;span class="o"&gt;|--&lt;/span&gt;&lt;span class="n"&gt;list&lt;/span&gt;                   &lt;span class="n"&gt;List&lt;/span&gt; &lt;span class="n"&gt;the&lt;/span&gt; &lt;span class="n"&gt;current&lt;/span&gt; &lt;span class="n"&gt;rpath&lt;/span&gt;&lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="n"&gt;runpath&lt;/span&gt; &lt;span class="o"&gt;(&lt;/span&gt;&lt;span class="k"&gt;default&lt;/span&gt;&lt;span class="o"&gt;)&lt;/span&gt;
+   &lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="n"&gt;k&lt;/span&gt;&lt;span class="o"&gt;|--&lt;/span&gt;&lt;span class="n"&gt;keepgoing&lt;/span&gt;              &lt;span class="n"&gt;Continue&lt;/span&gt; &lt;span class="k"&gt;as&lt;/span&gt; &lt;span class="n"&gt;much&lt;/span&gt; &lt;span class="k"&gt;as&lt;/span&gt; &lt;span class="n"&gt;possible&lt;/span&gt; &lt;span class="n"&gt;after&lt;/span&gt; &lt;span class="n"&gt;an&lt;/span&gt; &lt;span class="n"&gt;error&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;
+   &lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="n"&gt;h&lt;/span&gt;&lt;span class="o"&gt;|--&lt;/span&gt;&lt;span class="n"&gt;help&lt;/span&gt;                   &lt;span class="n"&gt;Show&lt;/span&gt; &lt;span class="k"&gt;this&lt;/span&gt; &lt;span class="n"&gt;usage&lt;/span&gt; &lt;span class="n"&gt;information&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;patchelf:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="n"&gt;syntax&lt;/span&gt;&lt;span class="o"&gt;:&lt;/span&gt; &lt;span class="n"&gt;patchelf&lt;/span&gt;
+  &lt;span class="o"&gt;[--&lt;/span&gt;&lt;span class="kd"&gt;set&lt;/span&gt;&lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="n"&gt;interpreter&lt;/span&gt; &lt;span class="n"&gt;FILENAME&lt;/span&gt;&lt;span class="o"&gt;]&lt;/span&gt;
+  &lt;span class="o"&gt;[--&lt;/span&gt;&lt;span class="n"&gt;print&lt;/span&gt;&lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="n"&gt;interpreter&lt;/span&gt;&lt;span class="o"&gt;]&lt;/span&gt;
+  &lt;span class="o"&gt;[--&lt;/span&gt;&lt;span class="kd"&gt;set&lt;/span&gt;&lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="n"&gt;rpath&lt;/span&gt; &lt;span class="n"&gt;RPATH&lt;/span&gt;&lt;span class="o"&gt;]&lt;/span&gt;
+  &lt;span class="o"&gt;[--&lt;/span&gt;&lt;span class="n"&gt;shrink&lt;/span&gt;&lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="n"&gt;rpath&lt;/span&gt;&lt;span class="o"&gt;]&lt;/span&gt;
+  &lt;span class="o"&gt;[--&lt;/span&gt;&lt;span class="n"&gt;print&lt;/span&gt;&lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="n"&gt;rpath&lt;/span&gt;&lt;span class="o"&gt;]&lt;/span&gt;
+  &lt;span class="o"&gt;[--&lt;/span&gt;&lt;span class="n"&gt;force&lt;/span&gt;&lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="n"&gt;rpath&lt;/span&gt;&lt;span class="o"&gt;]&lt;/span&gt;
+  &lt;span class="o"&gt;[--&lt;/span&gt;&lt;span class="n"&gt;remove&lt;/span&gt;&lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="n"&gt;needed&lt;/span&gt; &lt;span class="n"&gt;LIBRARY&lt;/span&gt;&lt;span class="o"&gt;]&lt;/span&gt;
+  &lt;span class="o"&gt;[--&lt;/span&gt;&lt;span class="n"&gt;debug&lt;/span&gt;&lt;span class="o"&gt;]&lt;/span&gt;
+  &lt;span class="o"&gt;[--&lt;/span&gt;&lt;span class="n"&gt;version&lt;/span&gt;&lt;span class="o"&gt;]&lt;/span&gt;
+  &lt;span class="n"&gt;FILENAME&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;&lt;code&gt;patchelf&lt;/code&gt; was developed by the &lt;a href="//nixos.org/nix"&gt;nixos&lt;/a&gt; people, who depend on it to make
+their whole idea of a package manager work.&lt;/p&gt;</summary></entry><entry><title>Where the hell is the vectorization report?</title><link href="//jepio.github.io/where-the-hell-is-the-vectorization-report.html" rel="alternate"></link><updated>2015-06-13T14:22:00+02:00</updated><author><name>Jepio</name></author><id>tag:jepio.github.io,2015-06-13:where-the-hell-is-the-vectorization-report.html</id><summary type="html">&lt;p&gt;Everyone should care about vectorization. It's relatively easy for the compiler
+to do on it's own compared to stuff like auto-parallelisation, and can yield
+high performance gains on certain parts of the code. The win can be anything
+from 2x to 8x, depending on what data type we're using and what kinds of
+instructions our processor supports. The only condition is that we have to write
+easy code that shows the compiler everything it needs to know to determine
+whether it's safe to vectorize.&lt;/p&gt;
+&lt;p&gt;Most of the time we talk about vectorization of loops. It so happens that in
+both clang and gcc the vectorizer is turned on automatically at &lt;code&gt;-O3&lt;/code&gt;
+optimization flags &lt;sup id="fnref:1"&gt;&lt;a class="footnote-ref" href="#fn:1" rel="footnote"&gt;1&lt;/a&gt;&lt;/sup&gt;. What we're interested in is knowing how well it does.
+And I don't mean benchmarking or profiling - we need to know if it has done its
+job.  That's what vectorization reports are there for. Clang has a fairly large
+set of flags to inform you of what went on behind your back:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;-Rpass=loop-vectorize
+-Rpass-missed=loop-vectorize
+-Rpass-analysis=loop-vectorize
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;I pretty much use all of them at the same time, everytime. You turn on the first
+one and you see nothing, so you turn on the second one and it tells you that
+this and that loop failed to be vectorized. Finally you have to turn on that
+last one to find out why. There really ought to be a flag that turns all of them
+on - something like &lt;code&gt;-fvectorize-report&lt;/code&gt;.&lt;/p&gt;
+&lt;p&gt;But that's nothing compared to the trouble that gcc caused me. Like a good
+citizen I open up my browser and search for &lt;em&gt;gcc autovectorization&lt;/em&gt;. With
+joy I remark that the first link leads to the GNU project website dealing with
+&lt;a href="https://gcc.gnu.org/projects/tree-ssa/vectorization.html"&gt;Auto-vectorization in GCC&lt;/a&gt;. But when I get there, it tells me to use
+&lt;code&gt;-ftree-vectorizer-verbose=N&lt;/code&gt; to turn on a verbose vectorization report. Seems
+reasonable, I think to myself, and start experimenting with it. But it doesn't
+work in GCC 4.9.2. I get no report of anything, neither failures nor successes.
+And on top of that, no warning/error message telling me that the flag doesn't
+work. Luckily the internet has other websites and the LHCb twiki website tells
+me that this flag is depracated in GCC 4.9. Someone should notify GNU of
+that&lt;sup id="fnref:2"&gt;&lt;a class="footnote-ref" href="#fn:2" rel="footnote"&gt;2&lt;/a&gt;&lt;/sup&gt;! The new flags are:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;-fopt-info-vec
+-fopt-info-vec-missed
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;You learn something new every day.&lt;/p&gt;
+&lt;div class="footnote"&gt;
+&lt;hr /&gt;
+&lt;ol&gt;
+&lt;li id="fn:1"&gt;
+&lt;p&gt;Clang might have vectorization enabled by default, I haven't really looked
+into it.&amp;#160;&lt;a class="footnote-backref" href="#fnref:1" rev="footnote" title="Jump back to footnote 1 in the text"&gt;&amp;#8617;&lt;/a&gt;&lt;/p&gt;
+&lt;/li&gt;
+&lt;li id="fn:2"&gt;
+&lt;p&gt;Don't worry, I plan on doing that myself and this post will help remind me
+of that.&amp;#160;&lt;a class="footnote-backref" href="#fnref:2" rev="footnote" title="Jump back to footnote 2 in the text"&gt;&amp;#8617;&lt;/a&gt;&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ol&gt;
+&lt;/div&gt;</summary></entry><entry><title>Bash's here documents</title><link href="//jepio.github.io/bashs-here-documents.html" rel="alternate"></link><updated>2015-06-03T11:11:00+02:00</updated><author><name>Jepio</name></author><id>tag:jepio.github.io,2015-06-03:bashs-here-documents.html</id><summary type="html">&lt;p&gt;I'm just about to finish reading the fantastic essay by Neal Stephanson entitled
+"&lt;em&gt;In the Beginning was the Command Line&lt;/em&gt;" and I stumbled upon this quote:&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;Unix is hard to learn. The process of learning it is one of multiple small
+epiphanies. Typically you are just on the verge of inventing some necessary
+tool or utility when you realize that someone else has already invented it, and
+built it in, and this explains some odd file or directory or command that you
+have noticed but never really understood before.&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;In the essay it appears not far from a reference to this very old dilbert
+comics:
+&lt;img alt="unix hacker" src="//jepio.github.io/images/unix-hacker.png" /&gt;&lt;/p&gt;
+&lt;p&gt;Now I thought it's worth mentioning these two things because of what I'm
+about to write about next. My biggest complaint against
+&lt;a href="//www.gnuplot.info"&gt;gnuplot&lt;/a&gt; has always been that it is missing bash-like
+features - access to utilities for basic data processing, simple looping. This
+makes it hard to work with for anything but the simplest plotting scripts.
+Instead I always reached for python's matplotlib library, which I love to hate,
+whenever I had to perform a more demanding task.&lt;/p&gt;
+&lt;p&gt;I was aware of the possibility of somehow calling gnuplot from inside bash, but
+this never appealed to me. It seemed to be a &lt;em&gt;forced&lt;/em&gt;, not elegant, solution to
+the problem at hand. But it wasn't until today that it finally dawned on me that
+this is actually &lt;strong&gt;the&lt;/strong&gt; right solution and I decided to write about it.&lt;/p&gt;
+&lt;p&gt;The bash syntax I am referring to is called &lt;code&gt;Here Documents&lt;/code&gt;. Inside a script
+you double redirect (kind of like append) to stdin the word &lt;code&gt;EOF&lt;/code&gt;. Everything
+entered after this point will be entered into the application you are calling,
+until it hits the word &lt;code&gt;EOF&lt;/code&gt;, the exact same one that you specified. You can use
+bash variables inside the &lt;em&gt;document&lt;/em&gt; and everything will be expanded properly.
+It works with everything: python, gnuplot, you name it. I have often felt the
+need to call out from bash to python because python's syntax is so much simpler.
+Now I have a way:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="c"&gt;#!/bin/sh&lt;/span&gt;
+
+python3 &lt;span class="s"&gt;&amp;lt;&amp;lt; EOF&lt;/span&gt;
+&lt;span class="s"&gt;print(&amp;quot;$*&amp;quot;)&lt;/span&gt;
+&lt;span class="s"&gt;EOF&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;Calling this script is equivalent to doing &lt;code&gt;echo&lt;/code&gt;, but probably does not cover
+many corner cases.&lt;/p&gt;
+&lt;p&gt;Still, I now feel comfortable with using this feature the next time I need to
+work with gnuplot. And like Neal wrote, it took an epiphany for me to realise
+that gnuplot does not need to have bash built into it to be useful, it is enough
+that it can handle arbitrary textual input from the outside.&lt;/p&gt;</summary></entry><entry><title>First code sample</title><link href="//jepio.github.io/first-code-sample.html" rel="alternate"></link><updated>2015-03-10T17:46:00+01:00</updated><author><name>Jepio</name></author><id>tag:jepio.github.io,2015-03-10:first-code-sample.html</id><summary type="html">&lt;p&gt;I'm trying out the syntax highlighting extension to markdown available in
+pelican. Here it goes&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="cp"&gt;#include &amp;lt;vector&amp;gt;&lt;/span&gt;
+
+&lt;span class="kt"&gt;int&lt;/span&gt; &lt;span class="nf"&gt;main&lt;/span&gt;&lt;span class="p"&gt;()&lt;/span&gt;
+&lt;span class="p"&gt;{&lt;/span&gt;
+    &lt;span class="n"&gt;std&lt;/span&gt;&lt;span class="o"&gt;::&lt;/span&gt;&lt;span class="n"&gt;vector&lt;/span&gt; &lt;span class="n"&gt;c&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt; &lt;span class="mi"&gt;1&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="mi"&gt;2&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="mi"&gt;3&lt;/span&gt; &lt;span class="p"&gt;};&lt;/span&gt;
+    &lt;span class="k"&gt;for&lt;/span&gt; &lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="k"&gt;auto&lt;/span&gt;&lt;span class="o"&gt;&amp;amp;&amp;amp;&lt;/span&gt; &lt;span class="nl"&gt;e&lt;/span&gt; &lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="n"&gt;c&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt;
+        &lt;span class="n"&gt;e&lt;/span&gt; &lt;span class="o"&gt;-=&lt;/span&gt; &lt;span class="mi"&gt;1&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+    &lt;span class="p"&gt;}&lt;/span&gt;
+    &lt;span class="k"&gt;return&lt;/span&gt; &lt;span class="n"&gt;c&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="mi"&gt;2&lt;/span&gt;&lt;span class="p"&gt;];&lt;/span&gt;
+&lt;span class="p"&gt;}&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;Now let's see how this looks.&lt;/p&gt;</summary></entry></feed>

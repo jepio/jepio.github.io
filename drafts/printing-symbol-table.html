@@ -3,7 +3,7 @@
 <head>
         <meta charset="utf-8" />
         <title>printing symbol table</title>
-        <link rel="stylesheet" href="//jepio.github.io/theme/css/my_main.css" />
+        <link rel="stylesheet" href="//jepio.github.io/theme/css/main.css" />
         <link href="//jepio.github.io/feeds/all.atom.xml" type="application/atom+xml" rel="alternate" title="Jepio's blog Atom Feed" />
 
         <!--[if IE]>
@@ -29,7 +29,7 @@
   <article>
     <header>
       <h1 class="entry-title">
-        <a href="//jepio.github.io/printing-symbol-table.html" rel="bookmark"
+        <a href="//jepio.github.io/drafts/printing-symbol-table.html" rel="bookmark"
            title="Permalink to printing symbol table">printing symbol table</a></h1>
     </header>
 
@@ -44,7 +44,35 @@
         </address>
 <p>In <a href="//jepio.github.io/category/programming.html">programming</a>.</p>
 
-</footer><!-- /.post-info -->      
+</footer><!-- /.post-info -->      <p>Ever so often I want to do two things:</p>
+<ol>
+<li>read the table of symbols exported from a shared library/executable</li>
+<li>read the <em>soname</em> of a library along with shared library dependencies</li>
+</ol>
+<p>Here's how to do both with 3 tools: <code>nm</code>, <code>readelf</code>, <code>objdump</code>. For the sake of
+brevity I will be working on a DSO<sup id="fnref:1"><a class="footnote-ref" href="#fn:1" rel="footnote">1</a></sup> called <code>libtest.so</code>.</p>
+<h2>Reading symbol table</h2>
+<div class="highlight"><pre>nm -CD libtest.so
+readelf -sD libtest.so  <span class="c"># no demangling!</span>
+objdump -CT libtest.so
+</pre></div>
+
+
+<h2>Dynamic section</h2>
+<div class="highlight"><pre>readelf -d libtest.so
+objdump -p libtest.so
+</pre></div>
+
+
+<p><code>ldd</code> also works on shared libraries.</p>
+<div class="footnote">
+<hr />
+<ol>
+<li id="fn:1">
+<p>Dynamic Shared Object&#160;<a class="footnote-backref" href="#fnref:1" rev="footnote" title="Jump back to footnote 1 in the text">&#8617;</a></p>
+</li>
+</ol>
+</div>
     </div><!-- /.entry-content -->
 
   </article>
@@ -71,10 +99,10 @@
 
         <footer id="contentinfo" class="body">
                 <address id="about" class="vcard body">
-                Proudly powered by <a href="http://getpelican.com/">Pelican</a>, which takes great advantage of <a href="http://python.org">Python</a>.
+                Proudly powered by <a href="https://getpelican.com/">Pelican</a>, which takes great advantage of <a href="https://python.org">Python</a>.
                 </address><!-- /#about -->
 
-                <p>The theme is by <a href="http://coding.smashingmagazine.com/2009/08/04/designing-a-html-5-layout-from-scratch/">Smashing Magazine</a>, thanks!</p>
+                <p>The theme is by <a href="https://coding.smashingmagazine.com/2009/08/04/designing-a-html-5-layout-from-scratch/">Smashing Magazine</a>, thanks!</p>
         </footer><!-- /#contentinfo -->
 
 </body>

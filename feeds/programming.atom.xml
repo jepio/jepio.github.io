@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<feed xmlns="http://www.w3.org/2005/Atom"><title>Jepio's blog</title><link href="//jepio.github.io/" rel="alternate"></link><link href="//jepio.github.io/feeds/programming.atom.xml" rel="self"></link><id>//jepio.github.io/</id><updated>2015-10-21T20:15:00+02:00</updated><entry><title>printing symbol table</title><link href="//jepio.github.io/printing-symbol-table.html" rel="alternate"></link><updated>2015-10-21T20:15:00+02:00</updated><author><name>Jepio</name></author><id>tag:jepio.github.io,2015-10-21:printing-symbol-table.html</id><summary type="html"></summary></entry><entry><title>Threads are processes</title><link href="//jepio.github.io/threads-are-processes.html" rel="alternate"></link><updated>2015-09-22T13:12:00+02:00</updated><author><name>Jepio</name></author><id>tag:jepio.github.io,2015-09-22:threads-are-processes.html</id><summary type="html">&lt;p&gt;The standard thread implementation on linux is &lt;code&gt;pthreads&lt;/code&gt; and processes can
+<feed xmlns="https://www.w3.org/2005/Atom"><title>Jepio's blog</title><link href="//jepio.github.io/" rel="alternate"></link><link href="//jepio.github.io/feeds/programming.atom.xml" rel="self"></link><id>//jepio.github.io/</id><updated>2015-09-22T13:12:00+02:00</updated><entry><title>Threads are processes</title><link href="//jepio.github.io/threads-are-processes.html" rel="alternate"></link><updated>2015-09-22T13:12:00+02:00</updated><author><name>Jepio</name></author><id>tag:jepio.github.io,2015-09-22:threads-are-processes.html</id><summary type="html">&lt;p&gt;The standard thread implementation on linux is &lt;code&gt;pthreads&lt;/code&gt; and processes can
 easily be created by issuing a &lt;code&gt;fork&lt;/code&gt; function call. While I was studying
 processes recently and reading the man pages for &lt;code&gt;clone&lt;/code&gt; I found two important
 pieces of information:&lt;/p&gt;
@@ -10,7 +10,7 @@ pieces of information:&lt;/p&gt;
 &lt;p&gt;The conclusion from these is that on linux &lt;strong&gt;threads == processes&lt;/strong&gt;. So threads
 are in reality &lt;em&gt;processes&lt;/em&gt; with a shared address space and processes are really
 &lt;em&gt;processes&lt;/em&gt; with COW&lt;sup id="fnref:1"&gt;&lt;a class="footnote-ref" href="#fn:1" rel="footnote"&gt;1&lt;/a&gt;&lt;/sup&gt; pages. You can find confirmation in many answers on
-stackoverflow &lt;a href="http://stackoverflow.com/questions/807506/threads-vs-processes-in-linux"&gt;such as this one&lt;/a&gt;.&lt;/p&gt;
+stackoverflow &lt;a href="https://stackoverflow.com/questions/807506/threads-vs-processes-in-linux"&gt;such as this one&lt;/a&gt;.&lt;/p&gt;
 &lt;p&gt;To me this is amazing, and kudos to the kernel devs for deciding that the two
 can be implemented in the same way and for optimizing this one path to where
 we are now.&lt;/p&gt;

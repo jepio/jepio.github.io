@@ -3,7 +3,7 @@
 <head>
         <meta charset="utf-8" />
         <title>Jepio's blog</title>
-        <link rel="stylesheet" href="//jepio.github.io/theme/css/my_main.css" />
+        <link rel="stylesheet" href="//jepio.github.io/theme/css/main.css" />
         <link href="//jepio.github.io/feeds/all.atom.xml" type="application/atom+xml" rel="alternate" title="Jepio's blog Atom Feed" />
 
         <!--[if IE]>
@@ -28,31 +28,7 @@
 
             <aside id="featured" class="body">
                 <article>
-                    <h1 class="entry-title"><a href="//jepio.github.io/printing-symbol-table.html">printing symbol table</a></h1>
-<footer class="post-info">
-        <abbr class="published" title="2015-10-21T20:15:00+02:00">
-                Published: Wed 21 October 2015
-        </abbr>
-
-        <address class="vcard author">
-                By                         <a class="url fn" href="//jepio.github.io/author/jepio.html">Jepio</a>
-        </address>
-<p>In <a href="//jepio.github.io/category/programming.html">programming</a>.</p>
-
-</footer><!-- /.post-info -->                </article>
-            </aside><!-- /#featured -->
-                <section id="content" class="body">
-                    <h1>Other articles</h1>
-                    <hr />
-                    <ol id="posts-list" class="hfeed">
-
-            <li><article class="hentry">
-                <header>
-                    <h1><a href="//jepio.github.io/playing-with-cp.html" rel="bookmark"
-                           title="Permalink to playing with cp">playing with cp</a></h1>
-                </header>
-
-                <div class="entry-content">
+                    <h1 class="entry-title"><a href="//jepio.github.io/playing-with-cp.html">playing with cp</a></h1>
 <footer class="post-info">
         <abbr class="published" title="2015-10-19T12:15:00+02:00">
                 Published: Mon 19 October 2015
@@ -63,16 +39,33 @@
         </address>
 <p>In <a href="//jepio.github.io/category/misc.html">misc</a>.</p>
 
-</footer><!-- /.post-info -->                <p>BTRFS breathes new air into the old <code>cp</code> command. Suddenly it can be used to
+</footer><!-- /.post-info --><p>BTRFS breathes new air into the old <code>cp</code> command. Suddenly it can be used to
 create instantaneous copy-on-write (CoW) snapshots of single files via <code>cp
 --reflink</code>.</p>
 <p>When you want to convert a folder to a subvolume, you are best of with the
 following commands:</p>
 <div class="highlight"><pre># mv folder folder_old
-# btrfs su create ...</pre></div>
-                <a class="readmore" href="//jepio.github.io/playing-with-cp.html">read more</a>
-                </div><!-- /.entry-content -->
-            </article></li>
+# btrfs su create ./folder
+# cp -a --reflink ./folder_old/. folder
+</pre></div>
+
+
+<p>If you want to disable data CoW (as with <code>nodatacow</code> mount option [but which
+isn't that useful because it applies to the whole btrfs volume]) on single
+files you need apply the xattr +C to it, and defrag, or simply <code>cp</code> it (if it's
+a folder best to use <code>cp -a folder/. dest</code>).</p>
+<div class="highlight"><pre><span class="nv">$ </span>chattr +C file
+<span class="nv">$ </span>btrfs <span class="k">fi</span> defrag file <span class="c"># or</span>
+<span class="nv">$ </span>cp --reflink<span class="o">=</span>never file file.new <span class="o">&amp;&amp;</span> mv file.new file
+</pre></div>
+
+
+<p>And there you have it: cp is suddenly much more useful.</p>                </article>
+            </aside><!-- /#featured -->
+                <section id="content" class="body">
+                    <h1>Other articles</h1>
+                    <hr />
+                    <ol id="posts-list" class="hfeed">
 
             <li><article class="hentry">
                 <header>
@@ -605,10 +598,10 @@ be an issue anymore. So: <em>Hello, World</em> to you!</p>
 
         <footer id="contentinfo" class="body">
                 <address id="about" class="vcard body">
-                Proudly powered by <a href="http://getpelican.com/">Pelican</a>, which takes great advantage of <a href="http://python.org">Python</a>.
+                Proudly powered by <a href="https://getpelican.com/">Pelican</a>, which takes great advantage of <a href="https://python.org">Python</a>.
                 </address><!-- /#about -->
 
-                <p>The theme is by <a href="http://coding.smashingmagazine.com/2009/08/04/designing-a-html-5-layout-from-scratch/">Smashing Magazine</a>, thanks!</p>
+                <p>The theme is by <a href="https://coding.smashingmagazine.com/2009/08/04/designing-a-html-5-layout-from-scratch/">Smashing Magazine</a>, thanks!</p>
         </footer><!-- /#contentinfo -->
 
 </body>

@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<feed xmlns="http://www.w3.org/2005/Atom"><title>Jepio's blog</title><link href="//jepio.github.io/" rel="alternate"></link><link href="//jepio.github.io/feeds/misc.atom.xml" rel="self"></link><id>//jepio.github.io/</id><updated>2015-10-19T12:15:00+02:00</updated><entry><title>playing with cp</title><link href="//jepio.github.io/playing-with-cp.html" rel="alternate"></link><updated>2015-10-19T12:15:00+02:00</updated><author><name>Jepio</name></author><id>tag:jepio.github.io,2015-10-19:playing-with-cp.html</id><summary type="html">&lt;p&gt;BTRFS breathes new air into the old &lt;code&gt;cp&lt;/code&gt; command. Suddenly it can be used to
+<feed xmlns="https://www.w3.org/2005/Atom"><title>Jepio's blog</title><link href="//jepio.github.io/" rel="alternate"></link><link href="//jepio.github.io/feeds/misc.atom.xml" rel="self"></link><id>//jepio.github.io/</id><updated>2015-10-19T12:15:00+02:00</updated><entry><title>playing with cp</title><link href="//jepio.github.io/playing-with-cp.html" rel="alternate"></link><updated>2015-10-19T12:15:00+02:00</updated><author><name>Jepio</name></author><id>tag:jepio.github.io,2015-10-19:playing-with-cp.html</id><summary type="html">&lt;p&gt;BTRFS breathes new air into the old &lt;code&gt;cp&lt;/code&gt; command. Suddenly it can be used to
 create instantaneous copy-on-write (CoW) snapshots of single files via &lt;code&gt;cp
 --reflink&lt;/code&gt;.&lt;/p&gt;
 &lt;p&gt;When you want to convert a folder to a subvolume, you are best of with the
@@ -135,7 +135,7 @@ that can be made are built into the kernel and can be modified through
 either the proc or sys filesystems. Some of them are activated by default -
 like CPU scaling. Others are best left in the hands of a tool that can
 change the settings based on whether external power is connected - I used
-to be a &lt;a href="http://www.samwel.tk/laptop_mode/"&gt;Laptop Mode Tools&lt;/a&gt; guy but lately I have turned to &lt;a href="http://linrunner.de/en/tlp/docs/tlp-linux-advanced-power-management.html"&gt;TLP&lt;/a&gt;
+to be a &lt;a href="https://www.samwel.tk/laptop_mode/"&gt;Laptop Mode Tools&lt;/a&gt; guy but lately I have turned to &lt;a href="https://linrunner.de/en/tlp/docs/tlp-linux-advanced-power-management.html"&gt;TLP&lt;/a&gt;
 (since I have a Thinkpad). TLP requires a little less tweaking but both do
 the same thing. I have also heard of jupiter and pm-utils but the former is
 (from what I heard) dead and the latter I have not investigated.&lt;/p&gt;

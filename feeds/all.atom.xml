@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<feed xmlns="http://www.w3.org/2005/Atom"><title>Jepio's blog</title><link href="//jepio.github.io/" rel="alternate"></link><link href="//jepio.github.io/feeds/all.atom.xml" rel="self"></link><id>//jepio.github.io/</id><updated>2015-10-21T20:15:00+02:00</updated><entry><title>printing symbol table</title><link href="//jepio.github.io/printing-symbol-table.html" rel="alternate"></link><updated>2015-10-21T20:15:00+02:00</updated><author><name>Jepio</name></author><id>tag:jepio.github.io,2015-10-21:printing-symbol-table.html</id><summary type="html"></summary></entry><entry><title>playing with cp</title><link href="//jepio.github.io/playing-with-cp.html" rel="alternate"></link><updated>2015-10-19T12:15:00+02:00</updated><author><name>Jepio</name></author><id>tag:jepio.github.io,2015-10-19:playing-with-cp.html</id><summary type="html">&lt;p&gt;BTRFS breathes new air into the old &lt;code&gt;cp&lt;/code&gt; command. Suddenly it can be used to
+<feed xmlns="https://www.w3.org/2005/Atom"><title>Jepio's blog</title><link href="//jepio.github.io/" rel="alternate"></link><link href="//jepio.github.io/feeds/all.atom.xml" rel="self"></link><id>//jepio.github.io/</id><updated>2015-10-19T12:15:00+02:00</updated><entry><title>playing with cp</title><link href="//jepio.github.io/playing-with-cp.html" rel="alternate"></link><updated>2015-10-19T12:15:00+02:00</updated><author><name>Jepio</name></author><id>tag:jepio.github.io,2015-10-19:playing-with-cp.html</id><summary type="html">&lt;p&gt;BTRFS breathes new air into the old &lt;code&gt;cp&lt;/code&gt; command. Suddenly it can be used to
 create instantaneous copy-on-write (CoW) snapshots of single files via &lt;code&gt;cp
 --reflink&lt;/code&gt;.&lt;/p&gt;
 &lt;p&gt;When you want to convert a folder to a subvolume, you are best of with the
@@ -38,7 +38,7 @@ pieces of information:&lt;/p&gt;
 &lt;p&gt;The conclusion from these is that on linux &lt;strong&gt;threads == processes&lt;/strong&gt;. So threads
 are in reality &lt;em&gt;processes&lt;/em&gt; with a shared address space and processes are really
 &lt;em&gt;processes&lt;/em&gt; with COW&lt;sup id="fnref:1"&gt;&lt;a class="footnote-ref" href="#fn:1" rel="footnote"&gt;1&lt;/a&gt;&lt;/sup&gt; pages. You can find confirmation in many answers on
-stackoverflow &lt;a href="http://stackoverflow.com/questions/807506/threads-vs-processes-in-linux"&gt;such as this one&lt;/a&gt;.&lt;/p&gt;
+stackoverflow &lt;a href="https://stackoverflow.com/questions/807506/threads-vs-processes-in-linux"&gt;such as this one&lt;/a&gt;.&lt;/p&gt;
 &lt;p&gt;To me this is amazing, and kudos to the kernel devs for deciding that the two
 can be implemented in the same way and for optimizing this one path to where
 we are now.&lt;/p&gt;
@@ -287,7 +287,7 @@ that can be made are built into the kernel and can be modified through
 either the proc or sys filesystems. Some of them are activated by default -
 like CPU scaling. Others are best left in the hands of a tool that can
 change the settings based on whether external power is connected - I used
-to be a &lt;a href="http://www.samwel.tk/laptop_mode/"&gt;Laptop Mode Tools&lt;/a&gt; guy but lately I have turned to &lt;a href="http://linrunner.de/en/tlp/docs/tlp-linux-advanced-power-management.html"&gt;TLP&lt;/a&gt;
+to be a &lt;a href="https://www.samwel.tk/laptop_mode/"&gt;Laptop Mode Tools&lt;/a&gt; guy but lately I have turned to &lt;a href="https://linrunner.de/en/tlp/docs/tlp-linux-advanced-power-management.html"&gt;TLP&lt;/a&gt;
 (since I have a Thinkpad). TLP requires a little less tweaking but both do
 the same thing. I have also heard of jupiter and pm-utils but the former is
 (from what I heard) dead and the latter I have not investigated.&lt;/p&gt;

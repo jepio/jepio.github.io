@@ -3,7 +3,7 @@
 <head>
         <meta charset="utf-8" />
         <title>Jepio's blog - programming</title>
-        <link rel="stylesheet" href="//jepio.github.io/theme/css/my_main.css" />
+        <link rel="stylesheet" href="//jepio.github.io/theme/css/main.css" />
         <link href="//jepio.github.io/feeds/all.atom.xml" type="application/atom+xml" rel="alternate" title="Jepio's blog Atom Feed" />
 
         <!--[if IE]>
@@ -28,31 +28,7 @@
 
             <aside id="featured" class="body">
                 <article>
-                    <h1 class="entry-title"><a href="//jepio.github.io/printing-symbol-table.html">printing symbol table</a></h1>
-<footer class="post-info">
-        <abbr class="published" title="2015-10-21T20:15:00+02:00">
-                Published: Wed 21 October 2015
-        </abbr>
-
-        <address class="vcard author">
-                By                         <a class="url fn" href="//jepio.github.io/author/jepio.html">Jepio</a>
-        </address>
-<p>In <a href="//jepio.github.io/category/programming.html">programming</a>.</p>
-
-</footer><!-- /.post-info -->                </article>
-            </aside><!-- /#featured -->
-                <section id="content" class="body">
-                    <h1>Other articles</h1>
-                    <hr />
-                    <ol id="posts-list" class="hfeed">
-
-            <li><article class="hentry">
-                <header>
-                    <h1><a href="//jepio.github.io/threads-are-processes.html" rel="bookmark"
-                           title="Permalink to Threads are processes">Threads are processes</a></h1>
-                </header>
-
-                <div class="entry-content">
+                    <h1 class="entry-title"><a href="//jepio.github.io/threads-are-processes.html">Threads are processes</a></h1>
 <footer class="post-info">
         <abbr class="published" title="2015-09-22T13:12:00+02:00">
                 Published: Tue 22 September 2015
@@ -63,16 +39,34 @@
         </address>
 <p>In <a href="//jepio.github.io/category/programming.html">programming</a>.</p>
 
-</footer><!-- /.post-info -->                <p>The standard thread implementation on linux is <code>pthreads</code> and processes can
+</footer><!-- /.post-info --><p>The standard thread implementation on linux is <code>pthreads</code> and processes can
 easily be created by issuing a <code>fork</code> function call. While I was studying
 processes recently and reading the man pages for <code>clone</code> I found two important
 pieces of information:</p>
 <ul>
 <li>threads are commonly implemented using <code>clone</code>.</li>
-<li>the fork function calls ...</li></ul>
-                <a class="readmore" href="//jepio.github.io/threads-are-processes.html">read more</a>
-                </div><!-- /.entry-content -->
-            </article></li>
+<li>the fork function calls the <code>clone</code> syscall.</li>
+</ul>
+<p>The conclusion from these is that on linux <strong>threads == processes</strong>. So threads
+are in reality <em>processes</em> with a shared address space and processes are really
+<em>processes</em> with COW<sup id="fnref:1"><a class="footnote-ref" href="#fn:1" rel="footnote">1</a></sup> pages. You can find confirmation in many answers on
+stackoverflow <a href="https://stackoverflow.com/questions/807506/threads-vs-processes-in-linux">such as this one</a>.</p>
+<p>To me this is amazing, and kudos to the kernel devs for deciding that the two
+can be implemented in the same way and for optimizing this one path to where
+we are now.</p>
+<div class="footnote">
+<hr />
+<ol>
+<li id="fn:1">
+<p><strong>C</strong>opy <strong>O</strong>n <strong>W</strong>rite which makes spawning cheap to do.&#160;<a class="footnote-backref" href="#fnref:1" rev="footnote" title="Jump back to footnote 1 in the text">&#8617;</a></p>
+</li>
+</ol>
+</div>                </article>
+            </aside><!-- /#featured -->
+                <section id="content" class="body">
+                    <h1>Other articles</h1>
+                    <hr />
+                    <ol id="posts-list" class="hfeed">
 
             <li><article class="hentry">
                 <header>
@@ -238,10 +232,10 @@ pelican. Here it goes</p>
 
         <footer id="contentinfo" class="body">
                 <address id="about" class="vcard body">
-                Proudly powered by <a href="http://getpelican.com/">Pelican</a>, which takes great advantage of <a href="http://python.org">Python</a>.
+                Proudly powered by <a href="https://getpelican.com/">Pelican</a>, which takes great advantage of <a href="https://python.org">Python</a>.
                 </address><!-- /#about -->
 
-                <p>The theme is by <a href="http://coding.smashingmagazine.com/2009/08/04/designing-a-html-5-layout-from-scratch/">Smashing Magazine</a>, thanks!</p>
+                <p>The theme is by <a href="https://coding.smashingmagazine.com/2009/08/04/designing-a-html-5-layout-from-scratch/">Smashing Magazine</a>, thanks!</p>
         </footer><!-- /#contentinfo -->
 
 </body>

@@ -32,7 +32,7 @@ SOCIAL = (('github', '//github.com/jepio'),
 DEFAULT_PAGINATION = False
 
 THEME = "notmyidea"
-CSS_FILE = 'my_main.css'
+CSS_FILE = 'main.css'
 GITHUB_URL = "//www.github.com/jepio/jepio.github.io"
 
 PLUGINS = [ "pelican_gist" ]

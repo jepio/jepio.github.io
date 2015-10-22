@@ -84,7 +84,7 @@ stopserver:
 
 publish:
 	$(PELICAN) $(INPUTDIR) -o $(OUTPUTDIR) -s $(PUBLISHCONF) $(PELICANOPTS)
-	find . -type f -print0 | xargs -0 sed -i "s/https:/https:/g"
+	find output -type f -print0 | xargs -0 sed -i "s/http:/https:/g"
 	cp my_main.css output/theme/css/
 
 ssh_upload: publish
